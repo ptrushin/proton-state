@@ -28,6 +28,10 @@
     ]
   },
   "devDependencies": {
+    "ag-grid-community": "^24.0.0",
+    "ag-grid-enterprise": "^24.0.0",
+    "ag-grid-odata": "^1.0.10",
+    "ag-grid-react": "^24.0.0",
     "antd": "^4.6.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
