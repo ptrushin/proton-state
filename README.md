@@ -3,5 +3,5 @@
 # examples
 https://codesandbox.io/s/github/ptrushin/proton-state-examples
 
-# npm
+# install
 npm install proton-state
