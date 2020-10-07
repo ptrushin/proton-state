@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
-import { defaultFilterDefs } from '../lib/antd-tag-filter-panel/Filters/defaultFilterTypes'
+import { localeText } from '../lib/antd-tag-filter-panel/locale/ru'
 
 export class AntdTagFilterPanelExample extends PureComponent {
     constructor(props) {
@@ -9,7 +9,7 @@ export class AntdTagFilterPanelExample extends PureComponent {
         this.state = {
             filterDefs: [
                 {
-                    name: 'InvolvementDate', title: 'Дата вовлечения', type: 'date',
+                    name: 'InvolvementDate', title: 'InvolvementDate', type: 'date',
                     fieldName: 'Requirement/InvolvementDate'
                 },
                 {
@@ -53,6 +53,7 @@ export class AntdTagFilterPanelExample extends PureComponent {
             <FilterPanel filterDefs={this.state.filterDefs} 
                 dataSources={this.state.dataSources}
                 filterTypes={this.state.filterTypes}
+                //localeText={localeText}
                 onChange={({ api }) => console.log(api.getODataFilters())}
             />
         );

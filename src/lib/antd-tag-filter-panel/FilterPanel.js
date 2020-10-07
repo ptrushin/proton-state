@@ -2,20 +2,25 @@ import React, { PureComponent } from "react";
 import { Menu, Button, Space, Tag, Dropdown, Popover } from 'antd';
 import SingleFilterPanel from './SingleFilterPanel'
 import ODataDataSource from "../datasources/ODataDataSource";
+import {localeText} from './locale/en';
 const queryString = require('query-string');
 
 //const { Header, Content, Sider } = Layout;
 
 export default class FilterPanel extends PureComponent {
-    dataSourceTypes = {
-        odata: {
-            instance: new ODataDataSource()
+    constructor(props) {
+        super(props);
+        this.dataSourceTypes = {
+            odata: {
+                instance: new ODataDataSource()
+            }
         }
-    }
-    state = {
-        addedFilterDef: null,
-        filterValues: [],
-        filterEntities: []
+        this.state = {
+            addedFilterDef: null,
+            filterValues: [],
+            filterEntities: []
+        }
+        this.localeText = props.localeText || localeText;
     }
 
     componentDidMount() {
@@ -89,7 +94,7 @@ export default class FilterPanel extends PureComponent {
             if (!filterDef || !this.state.filterValues[name]) return null;
             let templateFunc = filterDef.template || this.props.defaultFilterDefs[filterDef.type].template;
             let template = templateFunc({ filterDef, value, entity: this.state.filterEntities[name] });
-            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
+            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
                 <Tag key={name} closable onClose={() => this.updateFilter({ filterDef: filterDef, value: null })}>
                     {template}
                 </Tag>
@@ -154,8 +159,8 @@ export default class FilterPanel extends PureComponent {
                     {this.renderFilterList()}
                 </Menu>
             }>
-                <Popover overlayStyle={{ width: '398px' }} title={this.state.filterAddPanelTitle} placement="bottomLeft" content={<SingleFilterPanel {...this.state.addedFilterDef} dataSource={this.getDataSource(this.state.addedFilterDef)} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} visible={this.state.filterAddPanelVisible} />} visible={this.state.filterAddPanelVisible}>
-                    <Button type="link">Добавить фильтр</Button>
+                <Popover overlayStyle={{ width: '398px' }} title={this.state.filterAddPanelTitle} placement="bottomLeft" content={<SingleFilterPanel {...this.state.addedFilterDef} dataSource={this.getDataSource(this.state.addedFilterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} visible={this.state.filterAddPanelVisible} />} visible={this.state.filterAddPanelVisible}>
+                    <Button type="link">{this.localeText.addFilterButton}</Button>
                 </Popover>
             </Dropdown>
         </Space>;

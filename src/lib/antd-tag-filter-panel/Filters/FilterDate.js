@@ -16,10 +16,10 @@ export default function FilterDate(props) {
     }
     return <Space direction="vertical" style={{ width: '100%' }}>
         <Select value={regime} onChange={(value) => {localOnChange(undefined); setRegime(value);}} style={{ width: '100%' }}>
-            <Option key="D">Даты</Option>
-            <Option key="M">Месяцы</Option>
-            <Option key="RM">Относительные месяцы</Option>
-            <Option key="RD">Относительные дни</Option>
+            <Option key="D">{props.localeText.filterDate.dates}</Option>
+            <Option key="M">{props.localeText.filterDate.months}</Option>
+            <Option key="RM">{props.localeText.filterDate.relmonths}</Option>
+            <Option key="RD">{props.localeText.filterDate.reldays}</Option>
         </Select>
         {regime === 'D'
             ? <RangePicker
@@ -36,12 +36,12 @@ export default function FilterDate(props) {
                 />
                 : regime === 'RM'
                     ? <Space>
-                        От
+                        {props.localeText.filterDate.from}
                         <InputNumber min={-12} max={12}
                             value={!value || !value.value ? undefined : value.value[0]}
                             onChange={(newValue) => localOnChange([newValue, ((value || {}).value || [])[1]])}
                         />
-                        До
+                        {props.localeText.filterDate.till}
                         <InputNumber min={-12} max={12}
                             value={!value || !value.value ? undefined : value.value[1]}
                             onChange={(newValue) => localOnChange([((value || {}).value || [])[0], newValue])}
@@ -49,9 +49,9 @@ export default function FilterDate(props) {
                     </Space>
                     : regime === 'RD'
                         ? <Space>
-                            От
+                            {props.localeText.filterDate.from}
                             <InputNumber min={-30} max={30} value={value} onChange={onChange} />
-                            До
+                            {props.localeText.filterDate.till}
                             <InputNumber min={-30} max={30} value={value} onChange={onChange} />
                         </Space>
                         : null}
