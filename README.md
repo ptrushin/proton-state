@@ -1,7 +1,7 @@
 # proton-state
 
-#examples
+# examples
 https://codesandbox.io/s/github/ptrushin/proton-state-examples
 
-#npm
+# npm
 npm install proton-state
