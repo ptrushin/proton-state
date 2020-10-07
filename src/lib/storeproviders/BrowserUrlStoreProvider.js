@@ -8,13 +8,10 @@ export default class BrowserUrlStoreProvider {
 
     save = (props) => {
         const { filters, filterDefs } = props;
-        const { history } = this.props;
-        console.log('history', history);
-        let pars = queryString.parse(history.location.search);
+        let pars = queryString.parse(window.location.search);
         for (let filterDef of filterDefs) {
             let name = filterDef.name;
             let value = filters[name];
-            console.log('for', name, value)
             if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
                 delete pars[name];
             } else {
@@ -23,20 +20,18 @@ export default class BrowserUrlStoreProvider {
         }
         let locationSearch = "?" + queryString.stringify(pars);
         console.log('BrowserUrlStoreProvider.save', filters, filterDefs, pars, locationSearch);
-        if (history.location.search != locationSearch)
+        if (window.location.search != locationSearch)
         {
             this.locationSearch = locationSearch;
-            history.push(`${history.location.pathname}${locationSearch}`);
+            window.location = `${window.location.pathname}${locationSearch}`;
         }
     }
 
     load = (props) => {
-        
         const { filterDefs } = props;
-        const { history } = this.props;
-        let isUpdated = this.locationSearch !== history.location.search;
-        this.locationSearch = history.location.search;
-        let pars = queryString.parse(history.location.search);
+        let isUpdated = this.locationSearch !== window.location.search;
+        this.locationSearch = window.location.search;
+        let pars = queryString.parse(window.location.search);
         console.log('load', filterDefs, pars)
         let filters = {};
         for (let filterDef of filterDefs) {

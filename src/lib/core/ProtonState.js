@@ -1,9 +1,10 @@
-import BrowserUrlStoreProvider from './BrowserUrlStoreProvider';
+import BrowserUrlStoreProvider from '../storeproviders/BrowserUrlStoreProvider';
+import ReactRouterStoreProvider from '../storeproviders/ReactRouterStoreProvider';
 
 export default class ProtonState {
     constructor(props) {
         this.props = props;
-        this.storeProvider = new BrowserUrlStoreProvider(props);
+        this.storeProvider = props.history ? new ReactRouterStoreProvider(props) : new BrowserUrlStoreProvider(props);
         this.stateProviders = [];
         this.filterDefs = props.filterDefs || [];
     }

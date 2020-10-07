@@ -11,18 +11,13 @@ export default class AgGridStateProvider {
         return this.agGridApi.columnController.gridColumns.map(column => {
             return {
                 provider: this,
-                name: column.colId
+                name: column.colId,
+                ...this.props.columnDefs[column.colId]
             }
         });
     }
     onFilterChanged = (event) => {
         const filterModel = event.api.getFilterModel();
-        console.log('filterModel', filterModel);
-        /*for (let name of Object.keys(filterModel))
-        {
-            let singleFilterModel = filterModel[name];
-            pars[name] = singleFilterModel.filter;
-        }*/
         this.protonStateApi.changeState({
             filters: filterModel
         });
@@ -36,7 +31,7 @@ export default class AgGridStateProvider {
         let filterInstance = this.agGridApi.getFilterInstance(colId);
         filterInstance.setModel({
             filterType: 'text',
-            type: 'contains',
+            type: 'equals',
             filter: value
         });
         filterInstance.onFilterChanged();

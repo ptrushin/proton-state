@@ -7,7 +7,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/aggrid/AgGridStateProvider";
-import { ExceptionMap } from "antd/lib/result";
+import moment from "moment";
 
 export class AgGridExample extends PureComponent {
     constructor(props) {
@@ -15,16 +15,26 @@ export class AgGridExample extends PureComponent {
         this.state = {
             columnDefs: [
                 { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
+                { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
                 { headerName: "Quantity", field: "Quantity", filter: 'agNumberColumnFilter' },
                 { headerName: "UnitPrice", field: "UnitPrice", filter: 'agNumberColumnFilter' },
                 { headerName: "Discount", field: "Discount", filter: 'agNumberColumnFilter' },
-            ]
+            ],
+            defaultColDef: {
+                sortable: true
+            },
+            columnTypes: {
+                'dateColumn': {
+                    filter: 'agDateColumnFilter',
+                    valueFormatter: (params) => params.value == null ? null : moment(params.value).format('DD.MM.YYYY')
+                }
+            }
         }
 
-        this.protonState = new ProtonState(props);
+        this.protonState = new ProtonState({ history: props.history });
     }
-    
+
 
     componentDidMount() {
         this.updateFilterValuesByLocationSearch();
@@ -36,36 +46,18 @@ export class AgGridExample extends PureComponent {
 
     updateFilterValuesByLocationSearch = () => {
         if (this.protonState) this.protonState.updateStateFromUrl();
-        /*let pars = queryString.parse(this.props.history.location.search);
-        this.setState({ notOnlyProblem: pars['notOnlyProblem'] === 'true' });
-
-        if (this.gridApi) {
-            for (let name of Object.keys(pars)) {
-                let value = pars[name];
-                let filterInstance = this.gridApi.getFilterInstance(name);
-                if (!filterInstance) continue;
-                filterInstance.setModel({
-                    filterType: 'text',
-                    type: 'contains',
-                    filter: value
-                });
-                filterInstance.onFilterChanged();
-            }
-        }*/
     }
-    
-    /*
-
-    getAllRows() {
-        let rowData = [];
-        this.gridApi.forEachNode(node => rowData.push(node.data));
-        return rowData;
-    }
-    */
 
     onGridReady = params => {
         this.gridApi = params.api;
-        this.protonState.addStateProvider(new AgGridStateProvider({agGridApi: this.gridApi}))
+        this.protonState.addStateProvider(new AgGridStateProvider({
+            agGridApi: this.gridApi,
+            columnDefs: {
+                "Product.ProductName": {
+                    stateName: 'ProductName'
+                }
+            }
+        }))
         this.gridColumnApi = params.columnApi;
         params.api.setServerSideDatasource(
             new OdataProvider({
@@ -86,37 +78,6 @@ export class AgGridExample extends PureComponent {
             })
         );
     };
-
-    /*
-    
-    refresh() {
-        if (!this.gridApi) return;
-        this.gridApi.deselectAll()
-        this.gridApi.purgeServerSideCache([]);
-        this.setState({ currentOperations: null });
-    }
-    
-    filterChanged(event) {
-        const filterModel = event.api.getFilterModel();
-        console.log('filterModel', filterModel);
-        let { history } = this.props;
-        let pars = queryString.parse(history.location.search);
-        let isModified = false;
-        for (let name of Object.keys(filterModel))
-        {
-            let singleFilterModel = filterModel[name];
-            if (singleFilterModel.filterType === "text" && singleFilterModel.type === "contains") {
-                if (pars[name] === singleFilterModel.filter) continue;
-                pars[name] = singleFilterModel.filter;
-                isModified = true;
-            }
-        }
-        if (!isModified) return;
-        let locationSearch = queryString.stringify(pars);
-        console.log(locationSearch)
-        locationSearch = locationSearch ? '?' + locationSearch : locationSearch;
-        history.push(history.location.pathname + locationSearch);
-    }*/
 
     render() {
         return (
