@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
-import { localeText } from '../lib/antd-tag-filter-panel/locale/ru'
+//import { localeText } from '../lib/antd-tag-filter-panel/locale/ru'
+import ProtonState from '../lib/core/ProtonState';
+import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
 
 export class AntdTagFilterPanelExample extends PureComponent {
     constructor(props) {
@@ -40,21 +42,32 @@ export class AntdTagFilterPanelExample extends PureComponent {
                 }
             },
             filterTypes: {
-                
+
             }
         }
 
-        //this.protonState = new ProtonState({ history: props.history });
+        this.protonState = new ProtonState({ history: props.history });
     }
 
+    onReady = (api) => {
+        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({
+            api: api,
+            /*columnDefs: {
+                "Product.ProductName": {
+                    stateName: 'ProductName'
+                }
+            }*/
+        }))
+    }
 
     render() {
         return (
-            <FilterPanel filterDefs={this.state.filterDefs} 
+            <FilterPanel filterDefs={this.state.filterDefs}
                 dataSources={this.state.dataSources}
                 filterTypes={this.state.filterTypes}
                 //localeText={localeText}
                 onChange={({ api }) => console.log(api.getODataFilters())}
+                onReady={({ api }) => this.onReady(api)}
             />
         );
     }

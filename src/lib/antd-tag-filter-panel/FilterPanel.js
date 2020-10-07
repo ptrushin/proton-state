@@ -21,6 +21,8 @@ export default class FilterPanel extends PureComponent {
             filterEntities: []
         }
         this.localeText = props.localeText || localeText;
+
+        this.onChangeEvent = this.props.onChange;
     }
 
     componentDidMount() {
@@ -61,6 +63,7 @@ export default class FilterPanel extends PureComponent {
     }*/
 
     getODataFilters = () => {
+        return null;
         if (!this.state.filterValues) return null;
         let filter = [];
         for (let name in this.state.filterValues) {
@@ -87,6 +90,7 @@ export default class FilterPanel extends PureComponent {
     }
 
     renderFilters = () => {
+        return;
         if (!this.state.filterValues) return null;
         return Object.keys(this.state.filterValues).map((name) => {
             let value = this.state.filterValues[name];
@@ -128,8 +132,19 @@ export default class FilterPanel extends PureComponent {
     }
 
     updateFilter = (props) => {
-        /*let { filterDef, value } = props;
-        let { urlPrefix, defaultFilterDefs, history } = this.props;
+        let { filterDef, value } = props;
+        this.setState({filterValues: {...this.state.filterValues, [filterDef.name]: value}}, () => {
+            if (this.onChangeEvent) {
+                this.onChangeEvent({
+                    api: this,
+                    filterDef: filterDef,
+                    value: value,
+                    filters: this.state.filterValues
+                });
+            }
+        })
+        
+        /*let { urlPrefix, defaultFilterDefs, history } = this.props;
         let filters = { ...this.state.filterValues, [filterDef.name]: value };
         let pars = queryString.parse(this.locationSearch);
 

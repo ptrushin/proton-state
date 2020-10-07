@@ -1,40 +1,32 @@
-export default class AgGridStateProvider {
+export default class AntTagFilterPanelStateProvider {
     constructor(props) {
         this.props = props;
         const { api, prefix } = props;
         this.protonStateApi = null;
         this.api = api;
-        this.api.addEventListener('filterChanged', this.onFilterChanged);
-        this.api.addEventListener('cellClicked', this.onCellClicked)
+        let currentOnChange = this.api.onChangeEvent;
+        console.log('ctor', this.api, currentOnChange)
+        this.api.onChangeEvent = (props) => {
+            if (currentOnChange) currentOnChange(props);
+            console.log('---!')
+            this.onFilterChanged(props);
+        }
     }
     getFilterDefs = () => {
-        return this.api.columnController.gridColumns.map(column => {
+        return this.api.props.filterDefs.map(filterDef => {
             return {
                 provider: this,
-                name: column.colId,
-                ...(this.props.columnDefs || {})[column.colId]
+                ...filterDef,
+                ...(this.props.filterDefs || {})[filterDef.name]
             }
         });
     }
-    onFilterChanged = (event) => {
-        const filterModel = event.api.getFilterModel();
+    onFilterChanged = (props) => {
+        console.log('onFilterChanged', props);
+        let {filters} = props;
         this.protonStateApi.changeState({
-            filters: filterModel
+            filters: filters
         });
-    }
-    onCellClicked = (event) => {
-        console.log('onCellClicked', event);
-        if (!event.event.altKey) return;
-        let value = event.value;
-        console.log('onCellClicked2', event);
-        let colId = event.column.colId;
-        let filterInstance = this.api.getFilterInstance(colId);
-        filterInstance.setModel({
-            filterType: 'text',
-            type: 'equals',
-            filter: value
-        });
-        filterInstance.onFilterChanged();
     }
     changeState = (props) => {
         let { filters } = props;
