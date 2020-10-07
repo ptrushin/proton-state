@@ -5,6 +5,7 @@ import FilterSelect from './Filters/FilterSelect'
 import FilterString from './Filters/FilterString'
 
 export default function SingleFilterPanel(props) {
+    console.log('SingleFilterPanel', props)
     const { visible, name, renderFilter, type, value: initialValue } = props;
     const { onOk, onCancel, ...restProps } = props;
     const [value, setValue] = useState(initialValue);

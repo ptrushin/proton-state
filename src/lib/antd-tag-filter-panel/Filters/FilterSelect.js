@@ -6,28 +6,21 @@ var debounce = require('lodash.debounce');
 const { Option } = Select;
 
 export default function FilterSelect(props) {
-    const { dataSource, odata, title, value, onChange, preLoad, options : preLoadOptions, name, visible } = props;
+    console.log('FilterSelect', props)
+    const { dataSource, title, value, onChange, preLoad, option, options : preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+
     const handleSearch = (value) => {
         if (!value) return;
-        const entityName = odata.entity.name;
-        const searchFields = odata.entity.searchFields
-            ? odata.entity.searchFields
-            : odata.entity.label
-                ? [odata.entity.label]
-                : null;
-        if (!searchFields) return;
-        const count = odata.entity.count || 20;
-
-        /*get({
-            url: `${dataSource.path}/${entityName}?$filter=${searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')
-                }&$top=${count}`,
-            callback: (json) => { setOptions(json.value); }
-        })*/
+        dataSource.instance.searchByText({
+            value: value, 
+            callback: (json) => { console.log('callback', json); setOptions(json.value); },
+            props: props
+        })
     }
 
     const debounceHandleSearch = useCallback(
-        odata.entity.debounce !== false
-            ? debounce(handleSearch, odata.entity.debounceTimeout || 500)
+        isDebounce !== false
+            ? debounce(handleSearch, debounceTimeout || 500)
             : handleSearch
         , [name]);
 
@@ -40,7 +33,7 @@ export default function FilterSelect(props) {
                 callback: (json) => { setOptions(json.value); }
             })*/
         }
-    }, [preLoad, dataSource.path, odata.entity.name]);
+    }, [preLoad, dataSource]);
 
     useEffect(() => {
         setOptions(null);
@@ -63,6 +56,6 @@ export default function FilterSelect(props) {
         onChange={(value) => {onChange(value); selectRef.current.blur()}}
         notFoundContent={null}
     >
-        {!options ? null : options.map(d => <Option key={d[odata.entity.key]}>{odata.entity.labelFunc ? odata.entity.labelFunc({value: d}) : d[odata.entity.label]}</Option>)}
+        {!options ? null : options.map(d => <Option key={d[option.key]}>{option.labelFunc ? option.labelFunc({value: d}) : d[option.label]}</Option>)}
     </ Select>;
 }

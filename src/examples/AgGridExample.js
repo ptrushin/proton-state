@@ -6,7 +6,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import ProtonState from '../lib/core/ProtonState';
-import AgGridStateProvider from "../lib/aggrid/AgGridStateProvider";
+import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import moment from "moment";
 
 export class AgGridExample extends PureComponent {

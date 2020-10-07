@@ -1,33 +1,35 @@
 import React, { PureComponent } from "react";
 import { Menu, Button, Space, Tag, Dropdown, Popover } from 'antd';
 import SingleFilterPanel from './SingleFilterPanel'
+import ODataDataSource from "../datasources/ODataDataSource";
 const queryString = require('query-string');
 
 //const { Header, Content, Sider } = Layout;
 
 export default class FilterPanel extends PureComponent {
+    dataSourceTypes = {
+        odata: {
+            instance: new ODataDataSource()
+        }
+    }
     state = {
         addedFilterDef: null,
         filterValues: [],
         filterEntities: []
     }
 
-    locationSearch = null;
-
     componentDidMount() {
         if (this.props.onReady) this.props.onReady({ api: this });
-        this.updateFilterValuesByLocationSearch();
     }
 
     componentDidUpdate() {
-        this.updateFilterValuesByLocationSearch();
     }
 
     getFilterDef = (name) => {
         return this.props.filterDefs.filter(fd => fd.name === name)[0];
     }
 
-    updateFilterValuesByLocationSearch = () => {
+    /*updateFilterValuesByLocationSearch = () => {
         let {history, defaultFilterDefs, dataSource, onChange, urlPrefix} = this.props;
         let quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
         if (this.locationSearch !== history.location.search) {
@@ -42,16 +44,16 @@ export default class FilterPanel extends PureComponent {
                 filterValues[name] = defaultFilterDefs[filterDef.type].deserialize({ filterDef, value: value });
                 if (filterDef.type === 'select') {
                     const entityName = filterDef.odata.entity.name;
-                    /*get({
+                    get({
                         url: `${dataSource.path}/${entityName}?$filter=${filterValues[name].map(v => `${filterDef.odata.entity.key} eq ${quoted(v, filterDef.odata.keyType)}`).join(' or ')
                             }`,
                         callback: (json) => { this.setState({ filterEntities: { ...this.state.filterEntities, [name]: json.value } }) }
-                    })*/
+                    })
                 }
             }
             this.setState({ filterValues: filterValues }, () => { if (onChange) onChange({ api: this }) })
         }
-    }
+    }*/
 
     getODataFilters = () => {
         if (!this.state.filterValues) return null;
@@ -66,6 +68,19 @@ export default class FilterPanel extends PureComponent {
         return filter;
     }
 
+    getDataSource = (filterDef) => {
+        console.log('getDataSource', filterDef, this.props.dataSources)
+        if (!filterDef || !filterDef.dataSource || !this.props.dataSources) return undefined;
+        let dataSource = filterDef.dataSource.name
+            ? this.props.dataSources[filterDef.dataSource.name]
+            : this.props.dataSources[Object.keys(this.props.dataSources)[0]];
+        return {
+            ...filterDef.dataSource,
+            ...dataSource,
+            ...this.dataSourceTypes[dataSource.type]
+        }
+    }
+
     renderFilters = () => {
         if (!this.state.filterValues) return null;
         return Object.keys(this.state.filterValues).map((name) => {
@@ -74,7 +89,7 @@ export default class FilterPanel extends PureComponent {
             if (!filterDef || !this.state.filterValues[name]) return null;
             let templateFunc = filterDef.template || this.props.defaultFilterDefs[filterDef.type].template;
             let template = templateFunc({ filterDef, value, entity: this.state.filterEntities[name] });
-            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.props.dataSource} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
+            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
                 <Tag key={name} closable onClose={() => this.updateFilter({ filterDef: filterDef, value: null })}>
                     {template}
                 </Tag>
@@ -108,7 +123,7 @@ export default class FilterPanel extends PureComponent {
     }
 
     updateFilter = (props) => {
-        let { filterDef, value } = props;
+        /*let { filterDef, value } = props;
         let { urlPrefix, defaultFilterDefs, history } = this.props;
         let filters = { ...this.state.filterValues, [filterDef.name]: value };
         let pars = queryString.parse(this.locationSearch);
@@ -128,6 +143,7 @@ export default class FilterPanel extends PureComponent {
         let locationSearch = queryString.stringify(pars);
         locationSearch = locationSearch ? '?' + locationSearch : locationSearch;
         history.push(history.location.pathname + locationSearch);
+        */
     }
 
     render() {
@@ -138,7 +154,7 @@ export default class FilterPanel extends PureComponent {
                     {this.renderFilterList()}
                 </Menu>
             }>
-                <Popover overlayStyle={{ width: '398px' }} title={this.state.filterAddPanelTitle} placement="bottomLeft" content={<SingleFilterPanel {...this.state.addedFilterDef} dataSource={this.props.dataSource} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} visible={this.state.filterAddPanelVisible} />} visible={this.state.filterAddPanelVisible}>
+                <Popover overlayStyle={{ width: '398px' }} title={this.state.filterAddPanelTitle} placement="bottomLeft" content={<SingleFilterPanel {...this.state.addedFilterDef} dataSource={this.getDataSource(this.state.addedFilterDef)} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} visible={this.state.filterAddPanelVisible} />} visible={this.state.filterAddPanelVisible}>
                     <Button type="link">Добавить фильтр</Button>
                 </Popover>
             </Dropdown>
