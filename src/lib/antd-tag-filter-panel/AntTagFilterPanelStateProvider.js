@@ -28,6 +28,11 @@ export default class AntTagFilterPanelStateProvider {
             filters: filters
         });
     }
+    getState = () => {
+        return {
+            filters: this.api.state.filterValues
+        };
+    }
     changeState = (props) => {
         let { filters } = props;
         let providerFilters = {};

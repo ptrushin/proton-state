@@ -21,7 +21,11 @@ export default class ProtonState {
     }
 
     changeState = (state) => {
-        let { filters } = state;
+        let filters = {}
+        for (let stateProvider of this.stateProviders) {
+            let state = stateProvider.getState();
+            filters = {...filters, ...state.filters}
+        }
         console.log('changeState', state);
         this.storeProvider.save({ filters: filters, filterDefs: this.filterDefs })
     }

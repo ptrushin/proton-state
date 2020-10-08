@@ -8,6 +8,8 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import moment from "moment";
+import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
+import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
 
 export class AgGridExample extends PureComponent {
     constructor(props) {
@@ -29,6 +31,41 @@ export class AgGridExample extends PureComponent {
                     filter: 'agDateColumnFilter',
                     valueFormatter: (params) => params.value == null ? null : moment(params.value).format('DD.MM.YYYY')
                 }
+            },
+            filterDefs: [
+                {
+                    name: 'InvolvementDate', title: 'InvolvementDate', type: 'date',
+                    fieldName: 'Requirement/InvolvementDate'
+                },
+                {
+                    name: 'Product', title: 'Product', type: 'select',
+                    fieldName: 'Requirement/WareId',
+                    //debounce: false,
+                    //debounceTimeout: 500,
+                    option: {
+                        key: 'ProductID',
+                        label: 'ProductName',
+                        //labelFunc: ({value}) => ``
+                    },
+                    dataSource: {
+                        //name: 'odata',
+                        entity: {
+                            name: 'Products',
+                            //count: 20,
+                            //searchFields: ['Name', "Code"]
+                        }
+                    }
+                }
+            ],
+            dataSources: {
+                'odata': {
+                    type: 'odata',
+                    root: 'https://services.odata.org/V4/Northwind/Northwind.svc/',
+                    //fetch: ({url}) => 
+                }
+            },
+            filterTypes: {
+
             }
         }
 
@@ -46,6 +83,17 @@ export class AgGridExample extends PureComponent {
 
     updateFilterValuesByLocationSearch = () => {
         if (this.protonState) this.protonState.updateStateFromUrl();
+    }
+
+    onFilterReady = (api) => {
+        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({
+            api: api,
+            /*columnDefs: {
+                "Product.ProductName": {
+                    stateName: 'ProductName'
+                }
+            }*/
+        }))
     }
 
     onGridReady = params => {
@@ -82,7 +130,15 @@ export class AgGridExample extends PureComponent {
     render() {
         return (
             <div style={{ width: '100%', height: '100vh' }}>
-                <div style={{ height: '30px' }}>12</div>
+                <div style={{ height: '30px' }}>
+                    <FilterPanel filterDefs={this.state.filterDefs}
+                        dataSources={this.state.dataSources}
+                        filterTypes={this.state.filterTypes}
+                        //localeText={localeText}
+                        onChange={({ api }) => console.log(api.getODataFilters())}
+                        onReady={({ api }) => this.onFilterReady(api)}
+                    />
+                </div>
 
                 <div style={{ height: 'calc(100% - 30px)' }}>
                     <div

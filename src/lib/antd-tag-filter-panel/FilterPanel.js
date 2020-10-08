@@ -39,6 +39,7 @@ export default class FilterPanel extends PureComponent {
     }
 
     getFullFilterDefByDef = (filterDef) => {
+        if (!filterDef) return undefined;
         console.log('getFullFilterDefByDef', defaultFilterTypes[filterDef.type], this.props.filterTypes[filterDef.type], filterDef);
         return merge.all([defaultFilterTypes[filterDef.type] || {}, this.props.filterTypes[filterDef.type] || {}, filterDef || {}]);
     }
@@ -146,7 +147,7 @@ export default class FilterPanel extends PureComponent {
         let { filterDef, value } = props;
         this.setState({
             filterValues: { ...this.state.filterValues, [filterDef.name]: value },
-            filterEntities: { ...this.state.filterEntities, [filterDef.name]: filterDef.type === 'select' ? value.map(v => {return {ProductName: v}}) : undefined },
+            filterEntities: { ...this.state.filterEntities, [filterDef.name]: filterDef.type === 'select' && value ? value.map(v => {return {ProductName: v}}) : undefined },
         }, () => {
             if (this.onChangeEvent) {
                 this.onChangeEvent({

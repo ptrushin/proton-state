@@ -23,11 +23,5 @@ export default class ODataDataSource {
                     response.json().then(data => callback(data))
                 }
             })
-
-        /*get({
-            url: `${dataSource.path}/${entityName}?$filter=${searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')
-                }&$top=${count}`,
-            callback: callback
-        })*/
     }
 }

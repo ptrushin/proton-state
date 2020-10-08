@@ -16,6 +16,11 @@ export default class AgGridStateProvider {
             }
         });
     }
+    getState = () => {
+        return {
+            filters: this.api.getFilterModel()
+        };
+    }
     onFilterChanged = (event) => {
         const filterModel = event.api.getFilterModel();
         this.protonStateApi.changeState({
