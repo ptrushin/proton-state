@@ -1,4 +1,18 @@
 export default class ODataDataSource {
+    getFilters = (props) => {
+        let {filterDefs, filters} = props;
+        let oDataFilters = [];
+        for (let filterDef of filterDefs) {
+            let value = filters[filterDef.name];
+            let oDataFilterFunc = filterDef.dataSources.odata.filter;
+            if (!oDataFilterFunc) continue;
+            let oDataFilter = oDataFilterFunc({filterDef, value});
+            if (oDataFilter === undefined) continue;
+            oDataFilters.push(oDataFilter);
+        }
+        return oDataFilters;
+    }
+
     searchByText = (props) => {
         const { value, callback, props: extProps } = props;
         let dataSource = extProps.dataSource;

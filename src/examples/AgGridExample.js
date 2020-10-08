@@ -39,7 +39,7 @@ export class AgGridExample extends PureComponent {
                 },
                 {
                     name: 'Product', title: 'Product', type: 'select',
-                    fieldName: 'Requirement/WareId',
+                    fieldName: 'Product/ProductID',
                     //debounce: false,
                     //debounceTimeout: 500,
                     option: {
@@ -86,6 +86,7 @@ export class AgGridExample extends PureComponent {
     }
 
     onFilterReady = (api) => {
+        this.filterApi = api;
         this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({
             api: api,
             /*columnDefs: {
@@ -122,6 +123,11 @@ export class AgGridExample extends PureComponent {
                 ,
                 beforeRequest: (query) => {
                     query.expand = ["Order($expand=Customer)", "Product"];
+                    let filters = this.filterApi.dataSourceTypes.odata.instance.getFilters({
+                        filterDefs: this.filterApi.getFullFilterDefs(),
+                        filters: this.filterApi.getFilters()
+                    })
+                    if (filters.length > 0) query.filter = filters;
                 }
             })
         );

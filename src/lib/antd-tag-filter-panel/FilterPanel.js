@@ -48,6 +48,14 @@ export default class FilterPanel extends PureComponent {
         return this.getFullFilterDefByDef(this.getFilterDef(name));
     }
 
+    getFullFilterDefs = () => {
+        return this.props.filterDefs.map(filterDef => this.getFullFilterDefByDef(filterDef));
+    }
+
+    getFilters = () => {
+        return this.state.filterValues;
+    }
+
     /*updateFilterValuesByLocationSearch = () => {
         let {history, defaultFilterDefs, dataSource, onChange, urlPrefix} = this.props;
         let quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;

@@ -47,19 +47,9 @@ export default class AntTagFilterPanelStateProvider {
     serialize = (value) => {
         return !value
             ? null
-            : value.type === 'contains' || value.type === 'equals'
-                ? value.filter
-                : JSON.stringify(value);
+            : JSON.stringify(value);
     }
     deserialize = (value) => {
-        if (value.startsWith('{')) {
-            return JSON.parse(value);
-        } else {
-            return {
-                filterType: 'text',
-                type: 'contains',
-                filter: value
-            }
-        }
+        return JSON.parse(value);
     }
 }
