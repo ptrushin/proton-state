@@ -11,7 +11,7 @@ import AgGridExample from './examples/AgGridExample'
 function App() {
     return <BrowserRouter>
         <ConfigProvider locale={locale}>
-            <Route exact path='/' render={(props) => <AntdTagFilterPanelExample {...props} />} />
+            <Route exact path='/' render={(props) => <AgGridExample {...props} />} />
             <Route path='/AntdTagFilterPanelExample' render={(props) => <AntdTagFilterPanelExample {...props} />} />
             <Route path='/AgGridExample' render={(props) => <AgGridExample {...props} />} />
         </ConfigProvider>
