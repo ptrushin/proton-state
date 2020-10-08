@@ -2,8 +2,10 @@ import React, { PureComponent } from "react";
 import { Menu, Button, Space, Tag, Dropdown, Popover } from 'antd';
 import SingleFilterPanel from './SingleFilterPanel'
 import ODataDataSource from "../datasources/ODataDataSource";
-import {localeText} from './locale/en';
+import { localeText } from './locale/en';
+import { defaultFilterTypes } from './Filters/defaultFilterTypes'
 const queryString = require('query-string');
+const merge = require('deepmerge')
 
 //const { Header, Content, Sider } = Layout;
 
@@ -34,6 +36,15 @@ export default class FilterPanel extends PureComponent {
 
     getFilterDef = (name) => {
         return this.props.filterDefs.filter(fd => fd.name === name)[0];
+    }
+
+    getFullFilterDefByDef = (filterDef) => {
+        console.log('getFullFilterDefByDef', defaultFilterTypes[filterDef.type], this.props.filterTypes[filterDef.type], filterDef);
+        return merge.all([defaultFilterTypes[filterDef.type] || {}, this.props.filterTypes[filterDef.type] || {}, filterDef || {}]);
+    }
+
+    getFullFilterDefByName = (name) => {
+        return this.getFullFilterDefByDef(this.getFilterDef(name));
     }
 
     /*updateFilterValuesByLocationSearch = () => {
@@ -90,14 +101,14 @@ export default class FilterPanel extends PureComponent {
     }
 
     renderFilters = () => {
-        return;
         if (!this.state.filterValues) return null;
         return Object.keys(this.state.filterValues).map((name) => {
             let value = this.state.filterValues[name];
-            let filterDef = this.getFilterDef(name);
+            let filterDef = this.getFullFilterDefByName(name);
+            console.log('renderFilters', filterDef);
             if (!filterDef || !this.state.filterValues[name]) return null;
-            let templateFunc = filterDef.template || this.props.defaultFilterDefs[filterDef.type].template;
-            let template = templateFunc({ filterDef, value, entity: this.state.filterEntities[name] });
+            let templateFunc = filterDef.template;
+            let template = templateFunc({ filterDef, value, entity: this.state.filterEntities[name], localeText: this.localeText });
             return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
                 <Tag key={name} closable onClose={() => this.updateFilter({ filterDef: filterDef, value: null })}>
                     {template}
@@ -133,7 +144,10 @@ export default class FilterPanel extends PureComponent {
 
     updateFilter = (props) => {
         let { filterDef, value } = props;
-        this.setState({filterValues: {...this.state.filterValues, [filterDef.name]: value}}, () => {
+        this.setState({
+            filterValues: { ...this.state.filterValues, [filterDef.name]: value },
+            filterEntities: { ...this.state.filterEntities, [filterDef.name]: filterDef.type === 'select' ? value.map(v => {return {ProductName: v}}) : undefined },
+        }, () => {
             if (this.onChangeEvent) {
                 this.onChangeEvent({
                     api: this,
@@ -143,7 +157,7 @@ export default class FilterPanel extends PureComponent {
                 });
             }
         })
-        
+
         /*let { urlPrefix, defaultFilterDefs, history } = this.props;
         let filters = { ...this.state.filterValues, [filterDef.name]: value };
         let pars = queryString.parse(this.locationSearch);
@@ -175,7 +189,7 @@ export default class FilterPanel extends PureComponent {
                 </Menu>
             }>
                 <Popover overlayStyle={{ width: '398px' }} title={this.state.filterAddPanelTitle} placement="bottomLeft" content={<SingleFilterPanel {...this.state.addedFilterDef} dataSource={this.getDataSource(this.state.addedFilterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} visible={this.state.filterAddPanelVisible} />} visible={this.state.filterAddPanelVisible}>
-                    <Button type="link">{this.localeText.addFilterButton}</Button>
+                    <Button type="link">{this.localeText.AddFilterButton}</Button>
                 </Popover>
             </Dropdown>
         </Space>;

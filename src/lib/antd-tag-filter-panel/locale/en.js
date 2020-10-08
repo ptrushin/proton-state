@@ -1,13 +1,15 @@
 export let localeText = {
-    'addFilterButton': 'Add filter',
-    'addButton': 'Add',
-    'cancelButton': 'Cancel',
-    'filterDate': {
-        'from': 'From',
-        'till': 'Till',
-        'dates': 'Dates',
-        'months': 'Months',
-        'relmonths': 'Relative months',
-        'reldays': 'Relative days'
+    'AddFilterButton': 'Add filter',
+    'AddButton': 'Add',
+    'CancelButton': 'Cancel',
+    'FilterDate': {
+        'From': 'From',
+        'Till': 'Till',
+        'from': 'from',
+        'till': 'till',
+        'Dates': 'Dates',
+        'Months': 'Months',
+        'Relative_months': 'Relative months',
+        'Relative_days': 'Relative days'
     }
 }

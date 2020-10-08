@@ -58,7 +58,7 @@ export let defaultFilterTypes = {
                 }
             }
         },
-        template: ({ filterDef, value }) => {
+        template: ({ filterDef, value, localeText }) => {
             if (!value) return undefined;
             let from = !value.value[0]
                 ? undefined
@@ -84,7 +84,7 @@ export let defaultFilterTypes = {
                                 ? `${value.value[1]} дн.`
                                 : undefined;
 
-            return `${filterDef.title}${from ? ` от ${from}` : ''}${till ? ` до ${till}` : ''}`
+            return `${filterDef.title}${from ? ` ${localeText.FilterDate.from} ${from}` : ''}${till ? ` ${localeText.FilterDate.till} ${till}` : ''}`
         },
         serialize: ({ filterDef, value }) => !value ? undefined : JSON.stringify([value.type, value.value[0], value.value[1]]),
         deserialize: ({ filterDef, value }) => {

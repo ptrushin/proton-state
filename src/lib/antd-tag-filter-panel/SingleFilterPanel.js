@@ -40,8 +40,8 @@ export default function SingleFilterPanel(props) {
         {FilterComponent}
         <br />
         <Space align="center" style={{ marginTop: 10 }}>
-            <Button ref={buttonRef} onClick={() => onOk({ filterDef: restProps, value: value })}>{props.localeText.addButton}</Button>
-            <Button onClick={onCancel}>{props.localeText.cancelButton}</Button>
+            <Button ref={buttonRef} onClick={() => onOk({ filterDef: restProps, value: value })}>{props.localeText.AddButton}</Button>
+            <Button onClick={onCancel}>{props.localeText.CancelButton}</Button>
         </Space>
     </div>
 }

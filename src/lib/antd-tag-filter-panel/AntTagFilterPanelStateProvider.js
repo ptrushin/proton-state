@@ -30,13 +30,14 @@ export default class AntTagFilterPanelStateProvider {
     }
     changeState = (props) => {
         let { filters } = props;
+        let providerFilters = {};
         for (let name in filters) {
             let value = filters[name];
-            let filterInstance = this.api.getFilterInstance(name);
-            if (!filterInstance) continue;
-            filterInstance.setModel(value);
-            filterInstance.onFilterChanged();
+            let filterDef = this.api.getFullFilterDefByName(name);
+            if (!filterDef) continue;
+            providerFilters[name] = value;
         }
+        this.api.setState({filterValues: providerFilters})
     }
     serialize = (value) => {
         return !value
