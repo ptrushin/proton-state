@@ -1,11 +1,12 @@
 {
   "name": "proton-state",
-  "version": "0.1.2",
-  "description": "Auto created by metadata Lists and Forms",
+  "version": "0.1.3",
+  "description": "",
   "author": "ptrushin",
   "keywords": [
     "ui",
     "aggrid",
+    "antd",
     "grid",
     "filter",
     "odata"
