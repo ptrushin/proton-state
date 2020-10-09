@@ -6,8 +6,6 @@ import { localeText } from './locale/en';
 import { defaultFilterTypes } from './Filters/defaultFilterTypes'
 const merge = require('deepmerge')
 
-//const { Header, Content, Sider } = Layout;
-
 export default class FilterPanel extends PureComponent {
     constructor(props) {
         super(props);
@@ -120,28 +118,7 @@ export default class FilterPanel extends PureComponent {
                     filters: this.state.filterValues
                 });
             }
-        })
-
-        /*let { urlPrefix, defaultFilterDefs, history } = this.props;
-        let filters = { ...this.state.filterValues, [filterDef.name]: value };
-        let pars = queryString.parse(this.locationSearch);
-
-        for (let name in filters) {
-            let nameWithPrefix = urlPrefix ? `${urlPrefix}${name}` : name;
-            let value = filters[name];
-            let filterDef = this.getFilterDef(name);
-            if (!filterDef) continue;
-            if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-                delete pars[nameWithPrefix];
-            } else {
-                pars[nameWithPrefix] = defaultFilterDefs[filterDef.type].serialize({ filterDef, value: value });
-            }
-        }
-
-        let locationSearch = queryString.stringify(pars);
-        locationSearch = locationSearch ? '?' + locationSearch : locationSearch;
-        history.push(history.location.pathname + locationSearch);
-        */
+        })    
     }
 
     render() {
