@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import OdataProvider from "ag-grid-odata";
 import { AllModules } from "ag-grid-enterprise";
 import { AgGridReact } from 'ag-grid-react';
+import { Switch } from 'antd'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import moment from "moment";
@@ -87,7 +88,9 @@ export class AgGridExample extends PureComponent {
         this.protonState = new ProtonState(
             {
                 history: props.history,
-                onChange: this.onStateChange
+                onChange: this.onStateChange,
+                rootComponent: this,
+                externalFilters: [{name: 'unitPriceGt20', dataSource: {odata: {filter: ({filterDef, value}) => value ? `UnitPrice gt 20` : undefined}}}]
             });
     }
 
@@ -154,6 +157,7 @@ export class AgGridExample extends PureComponent {
         return (
             <div style={{ width: '100%', height: '100vh' }}>
                 <div style={{ height: '30px' }}>
+                    <Switch checked={this.state.unitPriceGt20} onChange={() => this.setState({unitPriceGt20: !this.state.unitPriceGt20})} /> {`UnitPrice > 20`}
                     <FilterPanel filterDefs={this.state.filterDefs}
                         dataSources={this.state.dataSources}
                         filterTypes={this.state.filterTypes}
