@@ -20,13 +20,15 @@ export default class ProtonState {
         this.updateStateFromUrl({initStateProvider: stateProvider});
     }
 
-    changeState = (state) => {
+    changeState = (props) => {
+        let {stateProvider} = props;
         let filters = {}
         for (let stateProvider of this.stateProviders) {
             let state = stateProvider.getState();
             filters = {...filters, ...state.filters}
         }
         if (this.props.onChange) this.props.onChange({
+            stateProvider: stateProvider,
             filterChange: true,
             filters: filters
         });
@@ -39,7 +41,7 @@ export default class ProtonState {
         if (!initStateProvider && !isUpdated) return;
         for (let stateProvider of this.stateProviders) {
             if (initStateProvider && initStateProvider !== stateProvider) continue;
-            stateProvider.changeState({filters: filters})
+            stateProvider.changeState({filters: filters, stateProvider: initStateProvider})
         }
     }
 

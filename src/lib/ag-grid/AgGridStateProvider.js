@@ -24,6 +24,7 @@ export default class AgGridStateProvider {
     onFilterChanged = (event) => {
         const filterModel = event.api.getFilterModel();
         this.protonStateApi.changeState({
+            stateProvider: this,
             filters: filterModel
         });
     }

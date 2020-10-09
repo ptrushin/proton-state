@@ -22,6 +22,7 @@ export default class AntTagFilterPanelStateProvider {
     onFilterChanged = (props) => {
         let {filters} = props;
         this.protonStateApi.changeState({
+            stateProvider: this,
             filters: filters
         });
     }

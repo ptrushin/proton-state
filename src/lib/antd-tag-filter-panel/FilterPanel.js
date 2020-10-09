@@ -131,7 +131,6 @@ export default class FilterPanel extends PureComponent {
     }
 
     initSingleFilterValueProps = (props) => {
-        console.log('initSingleFilterValueProps', props)
         let { filterDef, valueProps } = props;
         let name = filterDef.name;
         this.setState({ filterValueProps: { ...this.state.filterValueProps, [name]: valueProps } })
@@ -143,7 +142,6 @@ export default class FilterPanel extends PureComponent {
         for (let filterDef of filterDefs) {
             let name = filterDef.name;
             let value = filters[name];
-            console.log(name, value, filterDef)
             if (value === undefined || value === null || !filterDef.dataSource.init) {
                 this.initSingleFilterValueProps({ filterDef: filterDef, valueProps: undefined })
             } else {
