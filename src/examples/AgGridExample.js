@@ -38,6 +38,16 @@ export class AgGridExample extends PureComponent {
                     fieldName: 'Order/OrderDate'
                 },
                 {
+                    name: 'Category', title: 'Category', type: 'select',
+                    fieldName: 'Product/CategoryID',
+                    option: {
+                        key: 'CategoryID',
+                        label: 'CategoryName',
+                    },
+                    dataSource: {entityName: 'Categories'}
+                    
+                },
+                {
                     name: 'Product', title: 'Product', type: 'select',
                     fieldName: 'Product/ProductID',
                     //debounce: false,
@@ -51,6 +61,7 @@ export class AgGridExample extends PureComponent {
                     dataSource: {
                         //name: 'odata',
                         entityName: 'Products',
+                        filter: ({filters}) => !filters.Category ? null : `CategoryID eq ${filters.Category}`
                         //searchFields: ['Name', "Code"]
                     }
                 }

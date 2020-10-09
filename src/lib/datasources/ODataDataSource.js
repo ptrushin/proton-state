@@ -14,7 +14,7 @@ export default class ODataDataSource {
     }
 
     searchByText = (props) => {
-        const { value, callback, props: {dataSource, option} } = props;
+        const { value, callback, filter, props: {dataSource, option} } = props;
         const entityName = dataSource.entityName;
         const searchFields = dataSource.searchFields
             ? dataSource.searchFields
@@ -24,7 +24,10 @@ export default class ODataDataSource {
         if (!searchFields) return;
         const count = option.count || 20;
 
-        fetch(`${dataSource.root}/${entityName}?$filter=${searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')}&$top=${count}`)
+        let filters = [searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')]
+        if (filter) filters.push(filter)
+
+        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}&$top=${count}`)
             .then(response => {
                 if (!response.ok) {
                     callback({

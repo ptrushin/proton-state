@@ -6,14 +6,16 @@ var debounce = require('lodash.debounce');
 const { Option } = Select;
 
 export default function FilterSelect(props) {
-    const { dataSource, title, value, onChange, preLoad, option, options : preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+    const { filters, dataSource, title, value, onChange, preLoad, option, options : preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
 
     const handleSearch = (value) => {
         if (!value) return;
+        console.log('handle', props)
         dataSource.instance.searchByText({
             value: value, 
             callback: (json) => { setOptions(json.value); },
-            props: props
+            props: props,
+            filter: dataSource.filter ? dataSource.filter({filters: filters}) : undefined
         })
     }
 
