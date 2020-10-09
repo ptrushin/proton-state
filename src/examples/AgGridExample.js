@@ -10,6 +10,7 @@ import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
 import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
+//import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
 export class AgGridExample extends PureComponent {
     constructor(props) {
@@ -152,7 +153,6 @@ export class AgGridExample extends PureComponent {
                         dataSources={this.state.dataSources}
                         filterTypes={this.state.filterTypes}
                         //localeText={localeText}
-                        //onChange={this.onFilterChange}
                         onReady={({ api }) => this.onFilterReady(api)}
                     />
                 </div>
@@ -170,17 +170,12 @@ export class AgGridExample extends PureComponent {
                             columnDefs={this.state.columnDefs}
                             rowData={this.state.rowData}
                             modules={AllModules}
-                            //Enable server mode DataSource
                             rowModelType="serverSide"
-                            // fetch 100 rows per at a time
                             cacheBlockSize={100}
                             onGridReady={this.onGridReady}
                             //localeText={agGridLocaleText}
                             columnTypes={this.state.columnTypes}
-                            //onRowSelected={this.onRowSelected.bind(this)}
-                            //tooltipShowDelay={600}
                             rowSelection="multiple"
-                        //onFilterChanged={(event) => this.filterChanged(event)}
                         >
                         </AgGridReact>
                     </div>
