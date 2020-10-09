@@ -38,9 +38,10 @@ export default class FilterPanel extends PureComponent {
     getFullFilterDefByDef = (filterDef) => {
         if (!filterDef) return undefined;
         return merge.all([
-            defaultFilterTypes[filterDef.type] || {}, 
-            (this.props.filterTypes && this.props.filterTypes[filterDef.type]) || {}, 
-            filterDef || {}
+            defaultFilterTypes[filterDef.type] || {},
+            (this.props.filterTypes && this.props.filterTypes[filterDef.type]) || {},
+            filterDef || {},
+            {dataSource: this.getDataSource(filterDef) || {}}
         ]);
     }
 
@@ -61,22 +62,26 @@ export default class FilterPanel extends PureComponent {
         let dataSource = filterDef.dataSource.name
             ? this.props.dataSources[filterDef.dataSource.name]
             : this.props.dataSources[Object.keys(this.props.dataSources)[0]];
-        return {
-            ...filterDef.dataSource,
-            ...dataSource,
-            ...this.dataSourceTypes[dataSource.type]
-        }
+
+        return merge.all([
+            defaultFilterTypes[filterDef.type] ? defaultFilterTypes[filterDef.type].dataSources[dataSource.type] || {} : {},
+            (this.props.filterTypes && this.props.filterTypes[filterDef.type]) ? this.props.filterTypes[filterDef.type].dataSources[dataSource.type] || {} : {},
+            filterDef.dataSource,
+            dataSource,
+            this.dataSourceTypes[dataSource.type]
+        ])
     }
 
     renderFilters = () => {
         if (!this.state.filterValues) return null;
         return Object.keys(this.state.filterValues).map((name) => {
             let value = this.state.filterValues[name];
+            let valueProps = this.state.filterValueProps[name];
             let filterDef = this.getFullFilterDefByName(name);
             if (!filterDef || !this.state.filterValues[name]) return null;
             let templateFunc = filterDef.template;
-            let template = templateFunc({ filterDef, value, valueProps: this.state.filterValueProps[name], localeText: this.localeText });
-            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
+            let template = templateFunc({ filterDef, value, valueProps: valueProps, localeText: this.localeText });
+            return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} valueProps={valueProps} dataSource={this.getDataSource(filterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
                 <Tag key={name} closable onClose={() => this.updateFilter({ filterDef: filterDef, value: null })}>
                     {template}
                 </Tag>
@@ -122,7 +127,39 @@ export default class FilterPanel extends PureComponent {
                     filters: this.state.filterValues
                 });
             }
-        })    
+        })
+    }
+
+    initSingleFilterValueProps = (props) => {
+        console.log('initSingleFilterValueProps', props)
+        let { filterDef, valueProps } = props;
+        let name = filterDef.name;
+        this.setState({ filterValueProps: { ...this.state.filterValueProps, [name]: valueProps } })
+    }
+
+    initFilterValueProps = (props) => {
+        let { filters } = props;
+        let filterDefs = this.getFullFilterDefs();
+        for (let filterDef of filterDefs) {
+            let name = filterDef.name;
+            let value = filters[name];
+            console.log(name, value, filterDef)
+            if (value === undefined || value === null || !filterDef.dataSource.init) {
+                this.initSingleFilterValueProps({ filterDef: filterDef, valueProps: undefined })
+            } else {
+                filterDef.dataSource.init({
+                    filterDef: filterDef,
+                    value: value,
+                    callback: (valueProps) => this.initSingleFilterValueProps({ filterDef: filterDef, valueProps: valueProps })
+                })
+            }
+        }
+    }
+
+    setFilters = (props) => {
+        let { filters } = props;
+        this.initFilterValueProps({ filters });
+        this.setState({ filterValues: filters })
     }
 
     render() {

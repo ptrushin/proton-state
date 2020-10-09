@@ -14,7 +14,14 @@ export let defaultFilterTypes = {
                         : Array.isArray(value)
                             ? `(${value.map(v => `${filterDef.fieldName} eq ${quoted(v, filterDef.keyType)}`).join(" or ")})`
                             : `${filterDef.fieldName} eq ${quoted(value)}`
-                }
+                },
+                init: ({ filterDef, value, callback }) => {
+                    filterDef.dataSource.instance.searchByKeys({
+                        value: value, 
+                        callback: json => callback({options: json.value}),
+                        props: filterDef
+                    })
+                },
             }
         },
         template: ({ filterDef, value, valueProps }) => {

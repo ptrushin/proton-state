@@ -39,7 +39,7 @@ export default class AntTagFilterPanelStateProvider {
             if (!filterDef) continue;
             providerFilters[name] = value;
         }
-        this.api.setState({filterValues: providerFilters})
+        this.api.setFilters({filters: providerFilters})
     }
     serialize = (value) => {
         return !value

@@ -36,4 +36,24 @@ export default class ODataDataSource {
                 }
             })
     }
+
+    quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
+
+    searchByKeys = (props) => {
+        const { value, callback, props: {dataSource, option, keyType} } = props;
+        const entityName = dataSource.entityName;
+        const keyName = option.key;
+        const valueArr = Array.isArray(value) ? value : [value];
+        fetch(`${dataSource.root}/${entityName}?$filter=${valueArr.map(k => `${keyName} eq ${this.quoted(k, keyType)}`).join(' or ')}`)
+            .then(response => {
+                if (!response.ok) {
+                    callback({
+                        '@odata.count': 0,
+                        value: []
+                    });
+                } else {
+                    response.json().then(data => callback(data))
+                }
+            })
+    }
 }
