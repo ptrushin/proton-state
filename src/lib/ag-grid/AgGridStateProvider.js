@@ -1,7 +1,7 @@
 export default class AgGridStateProvider {
     constructor(props) {
         this.props = props;
-        const { api, prefix } = props;
+        const { api } = props;
         this.protonStateApi = null;
         this.api = api;
         this.api.addEventListener('filterChanged', this.onFilterChanged);

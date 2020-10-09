@@ -44,6 +44,7 @@ export default function FilterSelect(props) {
     let getOptionsByValue = (value) => {
         if (value === undefined || value === null) return undefined;
         let valueArr = Array.isArray(value) ? value : [value];
+        // eslint-disable-next-line
         return valueArr.map(v => options.filter(o => o[option.key] == v)[0])
     }
 

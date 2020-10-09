@@ -19,7 +19,7 @@ export default class BrowserUrlStoreProvider {
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
-        if (window.location.search != locationSearch)
+        if (window.location.search !== locationSearch)
         {
             this.locationSearch = locationSearch;
             window.location = `${window.location.pathname}${locationSearch}`;

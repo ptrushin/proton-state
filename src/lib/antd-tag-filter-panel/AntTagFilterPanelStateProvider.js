@@ -1,7 +1,7 @@
 export default class AntTagFilterPanelStateProvider {
     constructor(props) {
         this.props = props;
-        const { api, prefix } = props;
+        const { api } = props;
         this.protonStateApi = null;
         this.api = api;
         let currentOnChange = this.api.onChangeEvent;

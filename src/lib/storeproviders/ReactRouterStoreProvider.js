@@ -21,7 +21,7 @@ export default class ReactRouterStoreProvider {
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
-        if (history.location.search != locationSearch)
+        if (history.location.search !== locationSearch)
         {
             this.locationSearch = locationSearch;
             history.push(`${history.location.pathname}${locationSearch}`);

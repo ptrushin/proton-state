@@ -4,7 +4,6 @@ import SingleFilterPanel from './SingleFilterPanel'
 import ODataDataSource from "../datasources/ODataDataSource";
 import { localeText } from './locale/en';
 import { defaultFilterTypes } from './Filters/defaultFilterTypes'
-const queryString = require('query-string');
 const merge = require('deepmerge')
 
 //const { Header, Content, Sider } = Layout;
@@ -53,46 +52,6 @@ export default class FilterPanel extends PureComponent {
 
     getFilters = () => {
         return this.state.filterValues;
-    }
-
-    /*updateFilterValuesByLocationSearch = () => {
-        let {history, defaultFilterDefs, dataSource, onChange, urlPrefix} = this.props;
-        let quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
-        if (this.locationSearch !== history.location.search) {
-            this.locationSearch = history.location.search;
-            let pars = queryString.parse(this.locationSearch);
-            let filterValues = {};
-            for (let nameWithPrefix in pars) {
-                let name = urlPrefix ? nameWithPrefix.replace(urlPrefix, '') : nameWithPrefix;
-                let value = pars[nameWithPrefix];
-                let filterDef = this.getFilterDef(name)
-                if (!filterDef) continue;
-                filterValues[name] = defaultFilterDefs[filterDef.type].deserialize({ filterDef, value: value });
-                if (filterDef.type === 'select') {
-                    const entityName = filterDef.odata.entity.name;
-                    get({
-                        url: `${dataSource.path}/${entityName}?$filter=${filterValues[name].map(v => `${filterDef.odata.entity.key} eq ${quoted(v, filterDef.odata.keyType)}`).join(' or ')
-                            }`,
-                        callback: (json) => { this.setState({ filterEntities: { ...this.state.filterEntities, [name]: json.value } }) }
-                    })
-                }
-            }
-            this.setState({ filterValues: filterValues }, () => { if (onChange) onChange({ api: this }) })
-        }
-    }*/
-
-    getODataFilters = () => {
-        return null;
-        if (!this.state.filterValues) return null;
-        let filter = [];
-        for (let name in this.state.filterValues) {
-            let value = this.state.filterValues[name];
-            let filterDef = this.getFilterDef(name);
-            if (!filterDef) continue;
-            let odata = this.props.defaultFilterDefs[filterDef.type].odata;
-            filter.push(odata.filter({ filterDef, value }));
-        }
-        return filter;
     }
 
     getDataSource = (filterDef) => {
