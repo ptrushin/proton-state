@@ -10,6 +10,7 @@ import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
 import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
+import {date2Def} from "./FilterDate2";
 //import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
 export class AgGridExample extends PureComponent {
@@ -39,14 +40,18 @@ export class AgGridExample extends PureComponent {
                     fieldName: 'Order/OrderDate'
                 },
                 {
+                    name: 'OrderDate2', title: 'OrderDate2', type: 'date2',
+                    fieldName: 'Order/OrderDate'
+                },
+                {
                     name: 'Category', title: 'Category', type: 'select',
                     fieldName: 'Product/CategoryID',
                     option: {
                         key: 'CategoryID',
                         label: 'CategoryName',
                     },
-                    dataSource: {entityName: 'Categories'}
-                    
+                    dataSource: { entityName: 'Categories' }
+
                 },
                 {
                     name: 'Product', title: 'Product', type: 'select',
@@ -62,7 +67,7 @@ export class AgGridExample extends PureComponent {
                     dataSource: {
                         //name: 'odata',
                         entityName: 'Products',
-                        filter: ({filters}) => !filters.Category ? null : `CategoryID eq ${filters.Category}`
+                        filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`
                         //searchFields: ['Name', "Code"]
                     }
                 }
@@ -74,9 +79,9 @@ export class AgGridExample extends PureComponent {
                     //fetch: ({url}) => 
                 }
             },
-            /*filterTypes: {
-
-            }*/
+            filterTypes: {
+                date2: date2Def
+            }
         }
 
         this.protonState = new ProtonState(
@@ -101,11 +106,11 @@ export class AgGridExample extends PureComponent {
 
     onFilterReady = (api) => {
         this.filterApi = api;
-        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({api: api}))
+        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({ api: api }))
     }
 
     onStateChange = (props) => {
-        let {stateProvider} = props;
+        let { stateProvider } = props;
         if (!stateProvider || stateProvider.api !== this.gridApi) this.gridApi.purgeServerSideCache([]);
     }
 
