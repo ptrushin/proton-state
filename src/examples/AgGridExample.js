@@ -34,8 +34,8 @@ export class AgGridExample extends PureComponent {
             },
             filterDefs: [
                 {
-                    name: 'InvolvementDate', title: 'InvolvementDate', type: 'date',
-                    fieldName: 'Requirement/InvolvementDate'
+                    name: 'OrderDate', title: 'OrderDate', type: 'date',
+                    fieldName: 'Order/OrderDate'
                 },
                 {
                     name: 'Product', title: 'Product', type: 'select',

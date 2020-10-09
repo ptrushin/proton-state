@@ -10,6 +10,8 @@ export let localeText = {
         'Dates': 'Dates',
         'Months': 'Months',
         'Relative_months': 'Relative months',
-        'Relative_days': 'Relative days'
+        'Relative_days': 'Relative days',
+        'monthsShort': 'months',
+        'daysShort': 'days'
     }
 }

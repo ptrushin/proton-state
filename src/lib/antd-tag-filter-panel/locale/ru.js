@@ -10,6 +10,8 @@ export let localeText = {
         'Dates': 'Даты',
         'Months': 'Месяцы',
         'Relative_months': 'Относительные месяцы',
-        'Relative_days': 'Относительные дни'
+        'Relative_days': 'Относительные дни',
+        'monthsShort': 'мес.',
+        'daysShort': 'дн.'
     }
 }

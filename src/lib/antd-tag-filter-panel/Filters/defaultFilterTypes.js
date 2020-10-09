@@ -64,10 +64,9 @@ export let defaultFilterTypes = {
                                         : undefined;
 
                     let filters = [];
-                    if (from) filters.push(`${filterDef.odata.name} ge ${from.format('YYYY-MM-DD')}T00:00:00Z`)
-                    if (till) filters.push(`${filterDef.odata.name} lt ${till.add(1, 'D').format('YYYY-MM-DD')}T00:00:00Z`)
+                    if (from) filters.push(`${filterDef.fieldName} ge ${from.format('YYYY-MM-DD')}T00:00:00Z`)
+                    if (till) filters.push(`${filterDef.fieldName} lt ${till.add(1, 'D').format('YYYY-MM-DD')}T00:00:00Z`)
                     return filters.join(' and ');
-                    //`Requirement/InvolvementDate lt ${moment(moment.now()).add(key, 'M').format('YYYY-MM-DD')}T00:00:00Z`,
                 }
             }
         },
@@ -80,9 +79,9 @@ export let defaultFilterTypes = {
                     : value.type === 'M'
                         ? moment(value.value[0]).format(monthFormat)
                         : value.type === 'RM'
-                            ? `${value.value[0]} мес.`
+                            ? `${value.value[0]} ${localeText.FilterDate.monthsShort}`
                             : value.type === 'RD'
-                                ? `${value.value[0]} дн.`
+                                ? `${value.value[0]} ${localeText.FilterDate.daysShort}`
                                 : undefined;
 
             let till = !value.value[1]
@@ -92,9 +91,9 @@ export let defaultFilterTypes = {
                     : value.type === 'M'
                         ? moment(value.value[1]).format(monthFormat)
                         : value.type === 'RM'
-                            ? `${value.value[1]} мес.`
+                            ? `${value.value[1]} ${localeText.FilterDate.monthsShort}`
                             : value.type === 'RD'
-                                ? `${value.value[1]} дн.`
+                                ? `${value.value[1]} ${localeText.FilterDate.daysShort}`
                                 : undefined;
 
             return `${filterDef.title}${from ? ` ${localeText.FilterDate.from} ${from}` : ''}${till ? ` ${localeText.FilterDate.till} ${till}` : ''}`
