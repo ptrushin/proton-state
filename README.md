@@ -18,15 +18,16 @@ npm install proton-state
 ## in component ctor
 ```
 this.protonState = new ProtonState(
-            {
-                history: props.history,
-                onChange: this.onStateChange
-            });
+{
+    history: props.history,
+    onChange: this.onStateChange
+});
 ```
 
 ## in onGridReady AgGrid event
 
 ```
 onGridReady = params => {
-        this.protonState.addStateProvider(new AgGridStateProvider({api: params.api}))
+    this.protonState.addStateProvider(new AgGridStateProvider({api: params.api}))
+    ...
 ```
