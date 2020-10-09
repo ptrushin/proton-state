@@ -10,7 +10,6 @@ export default function FilterSelect(props) {
 
     const handleSearch = (value) => {
         if (!value) return;
-        console.log('handle', props)
         dataSource.instance.searchByText({
             value: value, 
             callback: (json) => { setOptions(json.value); },
