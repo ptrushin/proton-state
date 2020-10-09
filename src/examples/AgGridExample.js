@@ -62,9 +62,9 @@ export class AgGridExample extends PureComponent {
                     //fetch: ({url}) => 
                 }
             },
-            filterTypes: {
+            /*filterTypes: {
 
-            }
+            }*/
         }
 
         this.protonState = new ProtonState(
@@ -89,18 +89,11 @@ export class AgGridExample extends PureComponent {
 
     onFilterReady = (api) => {
         this.filterApi = api;
-        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({
-            api: api,
-            /*columnDefs: {
-                "Product.ProductName": {
-                    stateName: 'ProductName'
-                }
-            }*/
-        }))
+        this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({api: api}))
     }
 
     onStateChange = (props) => {
-        this.gridApi.purgeServerSideCache([]);
+        //this.gridApi.purgeServerSideCache([]);
     }
 
     onGridReady = params => {

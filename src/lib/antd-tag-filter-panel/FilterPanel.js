@@ -37,7 +37,11 @@ export default class FilterPanel extends PureComponent {
 
     getFullFilterDefByDef = (filterDef) => {
         if (!filterDef) return undefined;
-        return merge.all([defaultFilterTypes[filterDef.type] || {}, this.props.filterTypes[filterDef.type] || {}, filterDef || {}]);
+        return merge.all([
+            defaultFilterTypes[filterDef.type] || {}, 
+            (this.props.filterTypes && this.props.filterTypes[filterDef.type]) || {}, 
+            filterDef || {}
+        ]);
     }
 
     getFullFilterDefByName = (name) => {
