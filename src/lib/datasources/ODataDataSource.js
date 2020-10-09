@@ -14,17 +14,15 @@ export default class ODataDataSource {
     }
 
     searchByText = (props) => {
-        const { value, callback, props: extProps } = props;
-        let dataSource = extProps.dataSource;
-        console.log('searchByText', props);
-        const entityName = dataSource.entity.name;
-        const searchFields = dataSource.entity.searchFields
-            ? dataSource.entity.searchFields
-            : extProps.option.label
-                ? [extProps.option.label]
+        const { value, callback, props: {dataSource, option} } = props;
+        const entityName = dataSource.entityName;
+        const searchFields = dataSource.searchFields
+            ? dataSource.searchFields
+            : option.label
+                ? [option.label]
                 : null;
         if (!searchFields) return;
-        const count = dataSource.entity.count || 20;
+        const count = option.count || 20;
 
         fetch(`${dataSource.root}/${entityName}?$filter=${searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')}&$top=${count}`)
             .then(response => {

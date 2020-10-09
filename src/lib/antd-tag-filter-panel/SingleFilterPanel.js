@@ -5,14 +5,14 @@ import FilterSelect from './Filters/FilterSelect'
 import FilterString from './Filters/FilterString'
 
 export default function SingleFilterPanel(props) {
-    console.log('SingleFilterPanel', props)
     const { visible, name, renderFilter, type, value: initialValue } = props;
     const { onOk, onCancel, ...restProps } = props;
     const [value, setValue] = useState(initialValue);
+    const [valueProps, setValueProps] = useState();
     const componentProps = {
         ...restProps,
         value: value,
-        onChange: (value) => {console.log('11'); setValue(value); buttonRef.current.focus();}
+        onChange: (value, valueProps) => {setValue(value); setValueProps(valueProps); buttonRef.current.focus();}
     }
 
     let FilterComponent = null;
@@ -33,14 +33,14 @@ export default function SingleFilterPanel(props) {
     const buttonRef = useRef(null);
 
     return <div onKeyUp={(event) => {
-        if (event.key === 'Enter') onOk({ filterDef: restProps, value: value });
+        if (event.key === 'Enter') onOk({ filterDef: restProps, value: value, valueProps: valueProps });
         if (event.keyCode === 27) onCancel();
     }
     }>
         {FilterComponent}
         <br />
         <Space align="center" style={{ marginTop: 10 }}>
-            <Button ref={buttonRef} onClick={() => onOk({ filterDef: restProps, value: value })}>{props.localeText.AddButton}</Button>
+            <Button ref={buttonRef} onClick={() => onOk({ filterDef: restProps, value: value, valueProps: valueProps })}>{props.localeText.AddButton}</Button>
             <Button onClick={onCancel}>{props.localeText.CancelButton}</Button>
         </Space>
     </div>

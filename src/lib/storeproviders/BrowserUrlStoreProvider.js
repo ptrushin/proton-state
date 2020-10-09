@@ -19,7 +19,6 @@ export default class BrowserUrlStoreProvider {
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
-        console.log('BrowserUrlStoreProvider.save', filters, filterDefs, pars, locationSearch);
         if (window.location.search != locationSearch)
         {
             this.locationSearch = locationSearch;
@@ -32,7 +31,6 @@ export default class BrowserUrlStoreProvider {
         let isUpdated = this.locationSearch !== window.location.search;
         this.locationSearch = window.location.search;
         let pars = queryString.parse(window.location.search);
-        console.log('load', filterDefs, pars)
         let filters = {};
         for (let filterDef of filterDefs) {
             let name = filterDef.name;

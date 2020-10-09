@@ -66,7 +66,6 @@ export class AntdTagFilterPanelExample extends PureComponent {
                 dataSources={this.state.dataSources}
                 filterTypes={this.state.filterTypes}
                 //localeText={localeText}
-                onChange={({ api }) => console.log(api.getODataFilters())}
                 onReady={({ api }) => this.onReady(api)}
             />
         );

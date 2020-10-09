@@ -5,11 +5,9 @@ export default class AntTagFilterPanelStateProvider {
         this.protonStateApi = null;
         this.api = api;
         let currentOnChange = this.api.onChangeEvent;
-        console.log('ctor', this.api, currentOnChange)
         this.api.onChangeEvent = (props) => {
-            if (currentOnChange) currentOnChange(props);
-            console.log('---!')
             this.onFilterChanged(props);
+            if (currentOnChange) currentOnChange(props);
         }
     }
     getFilterDefs = () => {
@@ -22,7 +20,6 @@ export default class AntTagFilterPanelStateProvider {
         });
     }
     onFilterChanged = (props) => {
-        console.log('onFilterChanged', props);
         let {filters} = props;
         this.protonStateApi.changeState({
             filters: filters

@@ -6,14 +6,13 @@ var debounce = require('lodash.debounce');
 const { Option } = Select;
 
 export default function FilterSelect(props) {
-    console.log('FilterSelect', props)
     const { dataSource, title, value, onChange, preLoad, option, options : preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
 
     const handleSearch = (value) => {
         if (!value) return;
         dataSource.instance.searchByText({
             value: value, 
-            callback: (json) => { console.log('callback', json); setOptions(json.value); },
+            callback: (json) => { setOptions(json.value); },
             props: props
         })
     }
@@ -42,6 +41,12 @@ export default function FilterSelect(props) {
 
     const selectRef = useRef(null);
 
+    let getOptionsByValue = (value) => {
+        if (value === undefined || value === null) return undefined;
+        let valueArr = Array.isArray(value) ? value : [value];
+        return valueArr.map(v => options.filter(o => o[option.key] == v)[0])
+    }
+
     return <Select
         style={{ width: '100%' }}
         mode="multiple"
@@ -53,7 +58,7 @@ export default function FilterSelect(props) {
         filterOption={false}
         onSearch={debounceHandleSearch}
         ref={selectRef}
-        onChange={(value) => {onChange(value); selectRef.current.blur()}}
+        onChange={(value) => {onChange(value, {options: getOptionsByValue(value)}); selectRef.current.blur()}}
         notFoundContent={null}
     >
         {!options ? null : options.map(d => <Option key={d[option.key]}>{option.labelFunc ? option.labelFunc({value: d}) : d[option.label]}</Option>)}

@@ -9,7 +9,6 @@ export default class ReactRouterStoreProvider {
     save = (props) => {
         const { filters, filterDefs } = props;
         const { history } = this.props;
-        console.log('history', history);
         let pars = queryString.parse(history.location.search);
         for (let filterDef of filterDefs) {
             let stateName = filterDef.stateName || filterDef.name;
@@ -22,7 +21,6 @@ export default class ReactRouterStoreProvider {
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
-        console.log('BrowserUrlStoreProvider.save', filters, filterDefs, pars, locationSearch);
         if (history.location.search != locationSearch)
         {
             this.locationSearch = locationSearch;
@@ -37,7 +35,6 @@ export default class ReactRouterStoreProvider {
         let isUpdated = this.locationSearch !== history.location.search;
         this.locationSearch = history.location.search;
         let pars = queryString.parse(history.location.search);
-        console.log('load', filterDefs, pars)
         let filters = {};
         for (let filterDef of filterDefs) {
             let stateName = filterDef.stateName || filterDef.name;

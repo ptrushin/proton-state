@@ -9,7 +9,6 @@ export let defaultFilterTypes = {
             odata: {
                 filter: ({ filterDef, value }) => {
                     let quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
-                    console.log('---', value)
                     return !value
                         ? undefined
                         : Array.isArray(value)
@@ -18,7 +17,13 @@ export let defaultFilterTypes = {
                 }
             }
         },
-        template: ({ filterDef, value, entity }) =>  `${filterDef.title} = ${!entity ? null : entity.map(e => e.Name).join(', ')}`,
+        template: ({ filterDef, value, valueProps }) => {
+            return `${filterDef.title} = ${!valueProps || !valueProps.options
+                ? null
+                : Array.isArray(valueProps.options)
+                    ? valueProps.options.map(e => filterDef.option.labelFunc ? filterDef.option.labelFunc(e) : e[filterDef.option.label]).join(', ')
+                    : filterDef.option.labelFunc ? filterDef.option.labelFunc(valueProps.options) : valueProps.options[filterDef.option.label]}`
+        },
         serialize: ({ filterDef, value }) => JSON.stringify(value),
         deserialize: ({ filterDef, value }) => JSON.parse(value),
     },

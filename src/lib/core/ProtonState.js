@@ -26,7 +26,10 @@ export default class ProtonState {
             let state = stateProvider.getState();
             filters = {...filters, ...state.filters}
         }
-        console.log('changeState', state);
+        if (this.props.onChange) this.props.onChange({
+            filterChange: true,
+            filters: filters
+        });
         this.storeProvider.save({ filters: filters, filterDefs: this.filterDefs })
     }
 
@@ -36,7 +39,6 @@ export default class ProtonState {
         for (let stateProvider of this.stateProviders) {
             stateProvider.changeState({filters: filters})
         }
-        console.log('updateStateFromUrl', filters);
     }
 
     componentDidMount() {

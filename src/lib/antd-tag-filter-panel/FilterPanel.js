@@ -20,7 +20,7 @@ export default class FilterPanel extends PureComponent {
         this.state = {
             addedFilterDef: null,
             filterValues: [],
-            filterEntities: []
+            filterValueProps: []
         }
         this.localeText = props.localeText || localeText;
 
@@ -40,7 +40,6 @@ export default class FilterPanel extends PureComponent {
 
     getFullFilterDefByDef = (filterDef) => {
         if (!filterDef) return undefined;
-        console.log('getFullFilterDefByDef', defaultFilterTypes[filterDef.type], this.props.filterTypes[filterDef.type], filterDef);
         return merge.all([defaultFilterTypes[filterDef.type] || {}, this.props.filterTypes[filterDef.type] || {}, filterDef || {}]);
     }
 
@@ -97,7 +96,6 @@ export default class FilterPanel extends PureComponent {
     }
 
     getDataSource = (filterDef) => {
-        console.log('getDataSource', filterDef, this.props.dataSources)
         if (!filterDef || !filterDef.dataSource || !this.props.dataSources) return undefined;
         let dataSource = filterDef.dataSource.name
             ? this.props.dataSources[filterDef.dataSource.name]
@@ -114,10 +112,9 @@ export default class FilterPanel extends PureComponent {
         return Object.keys(this.state.filterValues).map((name) => {
             let value = this.state.filterValues[name];
             let filterDef = this.getFullFilterDefByName(name);
-            console.log('renderFilters', filterDef);
             if (!filterDef || !this.state.filterValues[name]) return null;
             let templateFunc = filterDef.template;
-            let template = templateFunc({ filterDef, value, entity: this.state.filterEntities[name], localeText: this.localeText });
+            let template = templateFunc({ filterDef, value, valueProps: this.state.filterValueProps[name], localeText: this.localeText });
             return <Popover key={name} trigger="click" overlayStyle={{ width: '298px' }} title={filterDef.title} placement="bottomLeft" content={<SingleFilterPanel {...filterDef} value={value} dataSource={this.getDataSource(filterDef)} localeText={this.localeText} onOk={this.singleFilterPanelOnOk} onCancel={this.singleFilterPanelOnCancel} />}>
                 <Tag key={name} closable onClose={() => this.updateFilter({ filterDef: filterDef, value: null })}>
                     {template}
@@ -146,16 +143,15 @@ export default class FilterPanel extends PureComponent {
     }
 
     singleFilterPanelOnOk = (props) => {
-        let { filterDef, value } = props;
         this.setState({ filterAddPanelVisible: false });
-        this.updateFilter({ filterDef: filterDef, value: value });
+        this.updateFilter(props);
     }
 
     updateFilter = (props) => {
-        let { filterDef, value } = props;
+        let { filterDef, value, valueProps } = props;
         this.setState({
             filterValues: { ...this.state.filterValues, [filterDef.name]: value },
-            filterEntities: { ...this.state.filterEntities, [filterDef.name]: filterDef.type === 'select' && value ? value.map(v => {return {ProductName: v}}) : undefined },
+            filterValueProps: { ...this.state.filterValueProps, [filterDef.name]: valueProps },
         }, () => {
             if (this.onChangeEvent) {
                 this.onChangeEvent({

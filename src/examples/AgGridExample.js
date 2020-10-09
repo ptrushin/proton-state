@@ -45,15 +45,13 @@ export class AgGridExample extends PureComponent {
                     option: {
                         key: 'ProductID',
                         label: 'ProductName',
+                        //count: 20,
                         //labelFunc: ({value}) => ``
                     },
                     dataSource: {
                         //name: 'odata',
-                        entity: {
-                            name: 'Products',
-                            //count: 20,
-                            //searchFields: ['Name', "Code"]
-                        }
+                        entityName: 'Products',
+                        //searchFields: ['Name', "Code"]
                     }
                 }
             ],
@@ -69,7 +67,11 @@ export class AgGridExample extends PureComponent {
             }
         }
 
-        this.protonState = new ProtonState({ history: props.history });
+        this.protonState = new ProtonState(
+            {
+                history: props.history,
+                onChange: this.onStateChange
+            });
     }
 
 
@@ -95,6 +97,10 @@ export class AgGridExample extends PureComponent {
                 }
             }*/
         }))
+    }
+
+    onStateChange = (props) => {
+        this.gridApi.purgeServerSideCache([]);
     }
 
     onGridReady = params => {
@@ -141,7 +147,7 @@ export class AgGridExample extends PureComponent {
                         dataSources={this.state.dataSources}
                         filterTypes={this.state.filterTypes}
                         //localeText={localeText}
-                        onChange={({ api }) => console.log(api.getODataFilters())}
+                        //onChange={this.onFilterChange}
                         onReady={({ api }) => this.onFilterReady(api)}
                     />
                 </div>

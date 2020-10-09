@@ -28,10 +28,8 @@ export default class AgGridStateProvider {
         });
     }
     onCellClicked = (event) => {
-        console.log('onCellClicked', event);
         if (!event.event.altKey) return;
         let value = event.value;
-        console.log('onCellClicked2', event);
         let colId = event.column.colId;
         let filterInstance = this.api.getFilterInstance(colId);
         filterInstance.setModel({
