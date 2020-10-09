@@ -23,3 +23,10 @@ this.protonState = new ProtonState(
                 onChange: this.onStateChange
             });
 ```
+
+## in onGridReady AgGrid event
+
+```
+onGridReady = params => {
+        this.protonState.addStateProvider(new AgGridStateProvider({api: params.api}))
+```
