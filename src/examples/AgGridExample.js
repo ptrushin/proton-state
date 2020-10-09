@@ -5,9 +5,9 @@ import { AllModules } from "ag-grid-enterprise";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import moment from "moment";
 import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
-import moment from "moment";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
 import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
 
