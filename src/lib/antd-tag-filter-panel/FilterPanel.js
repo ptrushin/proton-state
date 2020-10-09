@@ -90,9 +90,8 @@ export default class FilterPanel extends PureComponent {
     }
 
     renderFilterList = () => {
-        return Object.keys(this.props.filterDefs).map((name) => {
-            const filterDef = this.props.filterDefs[name];
-            return <Menu.Item key={name} onClick={() => this.renderSingleFilterPanel({ filterDef: filterDef })}>
+        return this.props.filterDefs.map((filterDef) => {
+            return <Menu.Item key={filterDef.name} onClick={() => this.renderSingleFilterPanel({ filterDef: this.getFullFilterDefByDef(filterDef) })}>
                 {filterDef.title}
             </Menu.Item>
         })

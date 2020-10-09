@@ -1,10 +1,13 @@
 import moment from 'moment';
+import FilterDate from './FilterDate'
+import FilterSelect from './FilterSelect'
 
 const dateFormat = 'DD/MM/YYYY';
 const monthFormat = 'MM/YYYY';
 
 export let defaultFilterTypes = {
     select: {
+        component: FilterSelect,
         dataSources: {
             odata: {
                 filter: ({ filterDef, value }) => {
@@ -35,6 +38,7 @@ export let defaultFilterTypes = {
         deserialize: ({ filterDef, value }) => JSON.parse(value),
     },
     date: {
+        component: FilterDate,
         dataSources: {
             odata: {
                 filter: ({ filterDef, value }) => {
