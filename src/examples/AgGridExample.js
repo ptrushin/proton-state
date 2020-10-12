@@ -12,7 +12,7 @@ import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
 import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
 import { date2Def } from "./FilterDate2";
-import {oDataDataSource} from '../lib/datasources/ODataDataSource'
+import { oDataDataSource } from '../lib/datasources/ODataDataSource'
 //import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
 export class AgGridExample extends PureComponent {
@@ -92,7 +92,12 @@ export class AgGridExample extends PureComponent {
                 onChange: this.onStateChange,
                 rootComponent: this,
                 externalFilterDefs: [
-                    { name: 'unitPriceGt20', dataSources: { odata: { filter: ({ filterDef, value }) => value ? `UnitPrice gt 20` : undefined } } }
+                    {
+                        name: 'unitPriceGt20',
+                        dataSources: { odata: { filter: ({ filterDef, value }) => value ? `UnitPrice gt 20` : undefined } },
+                        serialize: ({ filterDef, value }) => value ? 'true' : undefined,
+                        deserialize: ({ filterDef, value }) => value === 'true',
+                    }
                 ]
             });
     }
@@ -157,7 +162,7 @@ export class AgGridExample extends PureComponent {
                         filterDefs: this.protonState.externalStateProvider.filterDefs,
                         filters: this.protonState.externalStateProvider.filterValues
                     })]
-                        
+
                     if (filters.length > 0) query.filter = filters;
                 }
             })
@@ -168,7 +173,7 @@ export class AgGridExample extends PureComponent {
         return (
             <div style={{ width: '100%', height: '100vh' }}>
                 <div style={{ height: '30px' }}>
-                    <span style={{marginRight: 20}}><Switch checked={this.state.unitPriceGt20} onChange={() => this.setState({ unitPriceGt20: !this.state.unitPriceGt20 })} /> {`UnitPrice > 20`}</span>
+                    <span style={{ marginRight: 20 }}><Switch checked={this.state.unitPriceGt20} onChange={() => this.setState({ unitPriceGt20: !this.state.unitPriceGt20 })} /> {`UnitPrice > 20`}</span>
                     <FilterPanel filterDefs={this.state.filterDefs}
                         dataSources={this.state.dataSources}
                         filterTypes={this.state.filterTypes}

@@ -17,7 +17,7 @@ export default class ReactRouterStoreProvider {
             if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
                 delete pars[stateName];
             } else {
-                pars[stateName] = filterDef.provider ? filterDef.provider.serialize(value) : JSON.stringify(value);
+                pars[stateName] = filterDef.provider ? filterDef.provider.serialize({filterDef, value}) : JSON.stringify(value);
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
@@ -41,7 +41,7 @@ export default class ReactRouterStoreProvider {
             let name = filterDef.name;
             let value = pars[stateName];
             if (value !== null && value !== undefined) {
-                filters[name] = filterDef.provider ? filterDef.provider.deserialize(value) : JSON.parse(value);
+                filters[name] = filterDef.provider ? filterDef.provider.deserialize({filterDef, value}) : JSON.parse(value);
             }
         }
         return {filters, isUpdated}

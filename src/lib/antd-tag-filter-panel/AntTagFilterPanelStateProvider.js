@@ -42,12 +42,14 @@ export default class AntTagFilterPanelStateProvider {
         }
         this.api.setFilters({filters: providerFilters})
     }
-    serialize = (value) => {
+    serialize = (props) => {
+        let {value} = props;
         return !value
             ? null
             : JSON.stringify(value);
     }
-    deserialize = (value) => {
+    deserialize = (props) => {
+        let {value} = props;
         return JSON.parse(value);
     }
 }

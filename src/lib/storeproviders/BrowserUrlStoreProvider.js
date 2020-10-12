@@ -15,7 +15,7 @@ export default class BrowserUrlStoreProvider {
             if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
                 delete pars[name];
             } else {
-                pars[name] = filterDef.provider ? filterDef.provider.serialize(value) : JSON.stringify(value);
+                pars[name] = filterDef.provider ? filterDef.provider.serialize({filterDef, value}) : JSON.stringify(value);
             }
         }
         let locationSearch = "?" + queryString.stringify(pars);
@@ -36,7 +36,7 @@ export default class BrowserUrlStoreProvider {
             let name = filterDef.name;
             let value = pars[name];
             if (value !== null && value !== undefined) {
-                filters[name] = filterDef.provider ? filterDef.provider.deserialize(value) : JSON.parse(value);
+                filters[name] = filterDef.provider ? filterDef.provider.deserialize({filterDef, value}) : JSON.parse(value);
             }
         }
         return {filters, isUpdated}

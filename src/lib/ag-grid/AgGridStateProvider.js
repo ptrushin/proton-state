@@ -50,14 +50,16 @@ export default class AgGridStateProvider {
             filterInstance.onFilterChanged();
         }
     }
-    serialize = (value) => {
+    serialize = (props) => {
+        let {value} = props;
         return !value
             ? null
             : value.type === 'contains' || value.type === 'equals'
                 ? value.filter
                 : JSON.stringify(value);
     }
-    deserialize = (value) => {
+    deserialize = (props) => {
+        let {value} = props;
         if (value.startsWith('{')) {
             return JSON.parse(value);
         } else {

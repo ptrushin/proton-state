@@ -45,12 +45,18 @@ export default class ExternalStateProvider {
         }
         this.props.rootComponent.setState(providerFilters)
     }
-    serialize = (value) => {
-        return !value
-            ? null
-            : JSON.stringify(value);
+    serialize = (props) => {
+        let { filterDef, value } = props;
+        return filterDef.serialize
+            ? filterDef.serialize(props)
+            : !value
+                ? undefined
+                : JSON.stringify(value);
     }
-    deserialize = (value) => {
-        return JSON.parse(value);
+    deserialize = (props) => {
+        let { filterDef, value } = props;
+        return filterDef.deserialize
+            ? filterDef.deserialize(props)
+            : JSON.parse(value);
     }
 }
