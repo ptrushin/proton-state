@@ -27,7 +27,7 @@ this.protonState = new ProtonState(
 ## in componentDidMount and componentDidUpdate
 
 ```
-if (this.protonState) this.protonState.updateState();
+this.protonState.updateState();
 ```
 
 ## in onGridReady AgGrid event

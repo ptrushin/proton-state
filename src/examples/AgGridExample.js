@@ -104,11 +104,11 @@ export class AgGridExample extends PureComponent {
 
 
     componentDidMount() {
-        if (this.protonState) this.protonState.updateState();
+        this.protonState.updateState();
     }
 
     componentDidUpdate() {
-        if (this.protonState) this.protonState.updateState();
+        this.protonState.updateState();
     }
     
     onFilterReady = (api) => {
