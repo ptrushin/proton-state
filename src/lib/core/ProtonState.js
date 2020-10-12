@@ -7,8 +7,8 @@ export default class ProtonState {
         this.props = props;
         this.storeProvider = props.history ? new ReactRouterStoreProvider(props) : new BrowserUrlStoreProvider(props);
         this.stateProviders = [];
-        this.filterDefs = props.filterDefs || [];
-        if (this.props.externalFilters) { 
+        this.filterDefs = [];
+        if (this.props.externalFilterDefs) { 
             this.externalStateProvider = new ExternalStateProvider(props);
             this.addStateProvider(this.externalStateProvider);
         }

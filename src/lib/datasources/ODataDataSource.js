@@ -60,3 +60,5 @@ export default class ODataDataSource {
             })
     }
 }
+
+export let oDataDataSource = new ODataDataSource();
