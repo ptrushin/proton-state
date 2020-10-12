@@ -8,12 +8,6 @@ export default class ProtonState {
         this.storeProvider = props.history ? new ReactRouterStoreProvider(props) : new BrowserUrlStoreProvider(props);
         this.stateProviders = [];
         this.filterDefs = [];
-        /*if (this.props.externalFilterDefs) { 
-            this.externalStateProvider = new ExternalStateProvider(props);
-            this.stateProviders.push(this.externalStateProvider);
-            this.externalStateProvider.protonStateApi = this;
-            this.filterDefs = [...this.filterDefs, ...this.externalStateProvider.getFilterDefs()]
-        }*/
     }
 
     state = {
@@ -45,7 +39,6 @@ export default class ProtonState {
     updateState = (props) => {
         let {initStateProvider} = props || {};
         if (this.props.externalFilterDefs && !this.externalStateProvider) {
-            console.log('updateState - new');
             this.externalStateProvider = new ExternalStateProvider(this.props);
             this.addStateProvider(this.externalStateProvider)
         }

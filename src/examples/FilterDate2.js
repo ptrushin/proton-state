@@ -14,7 +14,6 @@ export default function FilterDate2(props) {
     const [regime, setRegime] = useState(type0 || 'I');
     const [regime1, setRegime1] = useState(type1 || 'M');
     const localOnChange = (value, regime1) => {
-        console.log('alue, regime1', value, regime1)
         if (regime1) setRegime1(regime1);
         if (!value) onChange(undefined)
         else onChange({ type: `${regime}${regime !== 'I' && regime1 ? regime1 : ''}`, value });
