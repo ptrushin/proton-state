@@ -53,17 +53,4 @@ export default class ProtonState {
         }
         
     }
-
-    componentDidMount() {
-        if (this.props.onReady) this.props.onReady({ api: this });
-        //this.updateFilterValuesByLocationSearch();
-    }
-
-    componentDidUpdate() {
-        this.updateFilterValuesByLocationSearch();
-    }
-
-    getFilterDef = (name) => {
-        return this.props.filterDefs.filter(fd => fd.name === name)[0];
-    }
 }

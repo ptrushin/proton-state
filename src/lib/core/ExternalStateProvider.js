@@ -2,8 +2,11 @@ export default class ExternalStateProvider {
     constructor(props) {
         this.props = props;
         this.protonStateApi = null;
-        this.filterDefs = props.externalFilterDefs;
         this.filterValues = {}
+        this.filterDefs = props.externalFilterDefs;
+        for (let filterDef of this.filterDefs) {
+            this.filterValues[filterDef.name] = (filterDef.stateHolder || this.props.rootComponent).state[filterDef.name];
+        }
     }
     getFilterDefs = () => {
         return this.filterDefs.map(filterDef => {

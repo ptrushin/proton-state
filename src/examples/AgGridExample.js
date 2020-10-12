@@ -83,7 +83,8 @@ export class AgGridExample extends PureComponent {
             },
             filterTypes: {
                 date2: date2Def
-            }
+            },
+            unitPriceGt20: false
         }
 
         this.protonState = new ProtonState(
