@@ -104,17 +104,13 @@ export class AgGridExample extends PureComponent {
 
 
     componentDidMount() {
-        this.updateFilterValuesByLocationSearch();
+        if (this.protonState) this.protonState.updateState();
     }
 
     componentDidUpdate() {
-        this.updateFilterValuesByLocationSearch();
+        if (this.protonState) this.protonState.updateState();
     }
-
-    updateFilterValuesByLocationSearch = () => {
-        if (this.protonState) this.protonState.updateStateFromUrl();
-    }
-
+    
     onFilterReady = (api) => {
         this.filterApi = api;
         this.protonState.addStateProvider(new AntTagFilterPanelStateProvider({ api: api }))

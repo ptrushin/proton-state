@@ -24,7 +24,7 @@ export default class ProtonState {
         this.stateProviders.push(stateProvider);
         stateProvider.protonStateApi = this;
         this.filterDefs = [...this.filterDefs, ...stateProvider.getFilterDefs()]
-        this.updateStateFromUrl({initStateProvider: stateProvider});
+        this.updateState({initStateProvider: stateProvider});
     }
 
     changeState = (props) => {
@@ -42,14 +42,15 @@ export default class ProtonState {
         this.storeProvider.save({ filters: filters, filterDefs: this.filterDefs })
     }
 
-    updateStateFromUrl = (props) => {
+    updateState = (props) => {
         let {initStateProvider} = props || {};
         if (this.props.externalFilterDefs && !this.externalStateProvider) {
+            console.log('updateState - new');
             this.externalStateProvider = new ExternalStateProvider(this.props);
             this.addStateProvider(this.externalStateProvider)
         }
         if (this.externalStateProvider) {
-            this.externalStateProvider.checkChanged()
+            if (this.externalStateProvider.checkChanged()) return;
         }
         let {filters, isUpdated} = this.storeProvider.load({ filterDefs: this.filterDefs });
         if (!initStateProvider && !isUpdated) return;

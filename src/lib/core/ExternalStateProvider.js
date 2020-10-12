@@ -30,6 +30,8 @@ export default class ExternalStateProvider {
             stateProvider: this,
             filters: this.filterValues
         });
+
+        return isUpdated;
     }
     getState = () => {
         return {
@@ -48,8 +50,8 @@ export default class ExternalStateProvider {
             providerFilters[name] = value;
         }
         console.log(providerFilters)
-        //this.props.rootComponent.setState(providerFilters)
-        this.props.rootComponent.setState({unitPriceGt20: true})
+        this.props.rootComponent.setState(providerFilters)
+        //this.props.rootComponent.setState({unitPriceGt20: true})
     }
     serialize = (props) => {
         let { filterDef, value } = props;
