@@ -52,8 +52,8 @@ export class AgGridExample extends PureComponent {
                         key: 'CategoryID',
                         label: 'CategoryName',
                     },
+                    preLoad: true,
                     dataSource: { entityName: 'Categories' }
-
                 },
                 {
                     name: 'Product', title: 'Product', type: 'select',

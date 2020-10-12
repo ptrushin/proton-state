@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Menu, Button, Space, Tag, Dropdown, Popover } from 'antd';
 import SingleFilterPanel from './SingleFilterPanel'
-import ODataDataSource from "../datasources/ODataDataSource";
+import { oDataDataSource } from "../datasources/ODataDataSource";
 import { localeText } from './locale/en';
 import { defaultFilterTypes } from './Filters/defaultFilterTypes'
 const merge = require('deepmerge')
@@ -11,7 +11,7 @@ export default class FilterPanel extends PureComponent {
         super(props);
         this.dataSourceTypes = {
             odata: {
-                instance: new ODataDataSource()
+                instance: oDataDataSource
             }
         }
         this.state = {

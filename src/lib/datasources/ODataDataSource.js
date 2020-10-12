@@ -40,6 +40,27 @@ export default class ODataDataSource {
             })
     }
 
+    getAll = (props) => {
+        const { callback, filter, props: {dataSource, option} } = props;
+        const entityName = dataSource.entityName;
+        const count = option.count || 0;
+
+        let filters = []
+        if (filter) filters.push(filter)
+
+        fetch(`${dataSource.root}/${entityName}?${filters.length > 0 ? `$filter=${filters.join(' and ')}` : ''}${count > 0 ? `&$top=${count}` : ''}`)
+            .then(response => {
+                if (!response.ok) {
+                    callback({
+                        '@odata.count': 0,
+                        value: []
+                    });
+                } else {
+                    response.json().then(data => callback(data))
+                }
+            })
+    }
+
     quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
 
     searchByKeys = (props) => {

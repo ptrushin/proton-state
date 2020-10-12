@@ -6,15 +6,15 @@ var debounce = require('lodash.debounce');
 const { Option } = Select;
 
 export default function FilterSelect(props) {
-    const { filters, dataSource, title, value, onChange, preLoad, option, options : preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+    const { filters, dataSource, title, value, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
 
     const handleSearch = (value) => {
         if (!value) return;
         dataSource.instance.searchByText({
-            value: value, 
+            value: value,
             callback: (json) => { setOptions(json.value); },
             props: props,
-            filter: dataSource.filter ? dataSource.filter({filters: filters}) : undefined
+            filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
         })
     }
 
@@ -28,12 +28,13 @@ export default function FilterSelect(props) {
 
     useEffect(() => {
         if (preLoad) {
-            /*get({
-                url: `${dataSource.path}/${odata.entity.name}`,
-                callback: (json) => { setOptions(json.value); }
-            })*/
+            dataSource.instance.getAll({
+                callback: (json) => { setOptions(json.value); },
+                props: props,
+                filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
+            })
         }
-    }, [preLoad, dataSource]);
+    }, [preLoad, dataSource, props, filters]);
 
     useEffect(() => {
         setOptions(null);
@@ -60,9 +61,9 @@ export default function FilterSelect(props) {
         filterOption={false}
         onSearch={debounceHandleSearch}
         ref={selectRef}
-        onChange={(value) => {onChange(value, {options: getOptionsByValue(value)}); selectRef.current.blur()}}
+        onChange={(value) => { onChange(value, { options: getOptionsByValue(value) }); selectRef.current.blur() }}
         notFoundContent={null}
     >
-        {!options ? null : options.map(d => <Option key={d[option.key]}>{option.labelFunc ? option.labelFunc({value: d}) : d[option.label]}</Option>)}
+        {!options ? null : options.map(d => <Option key={d[option.key]}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option>)}
     </ Select>;
 }
