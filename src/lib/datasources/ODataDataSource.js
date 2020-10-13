@@ -27,7 +27,9 @@ export default class ODataDataSource {
         let filters = [searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')]
         if (filter) filters.push(filter)
 
-        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}&$top=${count}`)
+        let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+
+        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}${expand}&$top=${count}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
@@ -48,7 +50,9 @@ export default class ODataDataSource {
         let filters = []
         if (filter) filters.push(filter)
 
-        fetch(`${dataSource.root}/${entityName}?${filters.length > 0 ? `$filter=${filters.join(' and ')}` : ''}${count > 0 ? `&$top=${count}` : ''}`)
+        let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+
+        fetch(`${dataSource.root}/${entityName}?${filters.length > 0 ? `$filter=${filters.join(' and ')}` : ''}${count > 0 ? `${expand}&$top=${count}` : ''}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
@@ -68,7 +72,8 @@ export default class ODataDataSource {
         const entityName = dataSource.entityName;
         const keyName = option.key;
         const valueArr = Array.isArray(value) ? value : [value];
-        fetch(`${dataSource.root}/${entityName}?$filter=${valueArr.map(k => `${keyName} eq ${this.quoted(k, keyType)}`).join(' or ')}`)
+        let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+        fetch(`${dataSource.root}/${entityName}?$filter=${valueArr.map(k => `${keyName} eq ${this.quoted(k, keyType)}`).join(' or ')}${expand}`)
             .then(response => {
                 if (!response.ok) {
                     callback({

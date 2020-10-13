@@ -64,12 +64,14 @@ export class AgGridExample extends PureComponent {
                         key: 'ProductID',
                         label: 'ProductName',
                         //count: 20,
-                        //labelFunc: ({value}) => ``
+                        labelFunc: ({value}) => <div><b>{value.ProductName}</b><br/>{value.Category.CategoryName}</div>
                     },
+                    template: ({ filterDef, value, valueProps }) => !valueProps ? null : `${filterDef.title} = ${valueProps.options.map(e => `${e.ProductName}`).join(', ')}`,
                     dataSource: {
                         //name: 'odata',
                         entityName: 'Products',
-                        filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`
+                        filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`,
+                        expand: ['Category']
                         //searchFields: ['Name', "Code"]
                     }
                 }
