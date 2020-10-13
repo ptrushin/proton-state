@@ -59,16 +59,15 @@ export default class AgGridStateProvider {
             filterInstance.onFilterChanged();
         }
         if (sort) {
-            this.api.columnController.columnApi.applyColumnState({
-                state: sort.map((s, i) => {
+            this.api.setSortModel(
+                sort.map((s, i) => {
                     return {
                         colId: s.colId,
                         sort: s.sort,
                         sortIndex: i
                     }
-                }),
-                defaultState: { sort: null },
-            });
+                })
+            )
         };
     }
 
