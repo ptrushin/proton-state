@@ -59,7 +59,6 @@ export default class AgGridStateProvider {
             filterInstance.onFilterChanged();
         }
         if (sort) {
-            console.log(this.api)
             this.api.columnController.columnApi.applyColumnState({
                 state: sort.map((s, i) => {
                     return {

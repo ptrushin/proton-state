@@ -21,7 +21,6 @@ export default class ReactRouterStoreProvider {
             }
         }
         let sortArray = [];
-        console.log(sort)
         if (sort) {
             for (let si in sort) {
                 let s = sort[si];
