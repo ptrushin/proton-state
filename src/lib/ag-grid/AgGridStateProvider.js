@@ -5,7 +5,8 @@ export default class AgGridStateProvider {
         this.protonStateApi = null;
         this.api = api;
         this.api.addEventListener('filterChanged', this.onFilterChanged);
-        this.api.addEventListener('cellClicked', this.onCellClicked)
+        this.api.addEventListener('cellClicked', this.onCellClicked);
+        this.api.addEventListener('sortChanged', this.onSortChanged);
     }
     getFilterDefs = () => {
         return this.api.columnController.gridColumns.map(column => {
@@ -18,14 +19,22 @@ export default class AgGridStateProvider {
     }
     getState = () => {
         return {
-            filters: this.api.getFilterModel()
+            filters: this.api.getFilterModel(),
+            sort: this.api.getSortModel()
         };
     }
     onFilterChanged = (event) => {
-        const filterModel = event.api.getFilterModel();
         this.protonStateApi.changeState({
             stateProvider: this,
-            filters: filterModel
+            filters: event.api.getFilterModel(),
+            sort: this.api.getSortModel()
+        });
+    }
+    onSortChanged = (event) => {
+        this.protonStateApi.changeState({
+            stateProvider: this,
+            filters: event.api.getFilterModel(),
+            sort: this.api.getSortModel()
         });
     }
     onCellClicked = (event) => {
@@ -41,7 +50,7 @@ export default class AgGridStateProvider {
         filterInstance.onFilterChanged();
     }
     changeState = (props) => {
-        let { filters } = props;
+        let { filters, sort } = props;
         for (let name in filters) {
             let value = filters[name];
             let filterInstance = this.api.getFilterInstance(name);
@@ -49,9 +58,23 @@ export default class AgGridStateProvider {
             filterInstance.setModel(value);
             filterInstance.onFilterChanged();
         }
+        if (sort) {
+            console.log(this.api)
+            this.api.columnController.columnApi.applyColumnState({
+                state: sort.map((s, i) => {
+                    return {
+                        colId: s.colId,
+                        sort: s.sort,
+                        sortIndex: i
+                    }
+                }),
+                defaultState: { sort: null },
+            });
+        };
     }
+
     serialize = (props) => {
-        let {value} = props;
+        let { value } = props;
         return !value
             ? null
             : value.type === 'contains' || value.type === 'equals'
@@ -59,7 +82,7 @@ export default class AgGridStateProvider {
                 : JSON.stringify(value);
     }
     deserialize = (props) => {
-        let {value} = props;
+        let { value } = props;
         if (value.startsWith('{')) {
             return JSON.parse(value);
         } else {

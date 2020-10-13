@@ -7,7 +7,7 @@ export default class ReactRouterStoreProvider {
     }
 
     save = (props) => {
-        const { filters, filterDefs } = props;
+        const { filters, filterDefs, sort, sortParName } = props;
         const { history } = this.props;
         let pars = queryString.parse(history.location.search);
         for (let filterDef of filterDefs) {
@@ -20,6 +20,15 @@ export default class ReactRouterStoreProvider {
                 pars[stateName] = filterDef.provider ? filterDef.provider.serialize({filterDef, value}) : JSON.stringify(value);
             }
         }
+        let sortArray = [];
+        console.log(sort)
+        if (sort) {
+            for (let si in sort) {
+                let s = sort[si];
+                sortArray.push(`${s.colId} ${s.sort}`)
+            }
+        }
+        if (sortArray.length > 0) pars[sortParName] = sortArray.join(",");
         let locationSearch = "?" + queryString.stringify(pars);
         if (history.location.search !== locationSearch)
         {
@@ -30,7 +39,7 @@ export default class ReactRouterStoreProvider {
 
     load = (props) => {
         
-        const { filterDefs } = props;
+        const { filterDefs, sortParName } = props;
         const { history } = this.props;
         let isUpdated = this.locationSearch !== history.location.search;
         this.locationSearch = history.location.search;
@@ -44,6 +53,18 @@ export default class ReactRouterStoreProvider {
                 filters[name] = filterDef.provider ? filterDef.provider.deserialize({filterDef, value}) : JSON.parse(value);
             }
         }
-        return {filters, isUpdated}
+        let sort = [];
+        if (pars[sortParName])
+        {
+            let sortArray = pars[sortParName].split(",")
+            for (let i in sortArray) {
+                let parts = sortArray[i].split(' ');
+                sort[i] = {
+                    colId: parts[0],
+                    sort: parts[1]
+                }
+            }
+        }
+        return {filters, sort, isUpdated}
     }
 }

@@ -21,19 +21,23 @@ export default class ProtonState {
         this.updateState({initStateProvider: stateProvider});
     }
 
+    getSortParName = () => 'sort';
+
     changeState = (props) => {
         let {stateProvider} = props;
         let filters = {}
+        let sort = {}
         for (let stateProvider of this.stateProviders) {
             let state = stateProvider.getState();
             filters = {...filters, ...state.filters}
+            sort = {...sort, ...state.sort}
         }
         if (this.props.onChange) this.props.onChange({
             stateProvider: stateProvider,
-            filterChange: true,
-            filters: filters
+            filters: filters,
+            sort: sort
         });
-        this.storeProvider.save({ filters: filters, filterDefs: this.filterDefs })
+        this.storeProvider.save({ filters: filters, filterDefs: this.filterDefs, sort: sort, sortParName: this.getSortParName() })
     }
 
     updateState = (props) => {
@@ -45,11 +49,11 @@ export default class ProtonState {
         if (this.externalStateProvider) {
             if (this.externalStateProvider.checkChanged()) return;
         }
-        let {filters, isUpdated} = this.storeProvider.load({ filterDefs: this.filterDefs });
+        let {filters, sort, isUpdated} = this.storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() });
         if (!initStateProvider && !isUpdated) return;
         for (let stateProvider of this.stateProviders) {
             if (initStateProvider && initStateProvider !== stateProvider) continue;
-            stateProvider.changeState({filters: filters, stateProvider: initStateProvider})
+            stateProvider.changeState({filters: filters, sort: sort, stateProvider: initStateProvider})
         }
         
     }
