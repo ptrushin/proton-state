@@ -7,7 +7,7 @@ const { Option } = Select;
 
 
 export default function FilterSelect(props) {
-    const { filters, dataSource, title, value, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+    const { filters, dataSource, title, single, value, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
 
     const handleSearch = (value) => {
         if (!value) return;
@@ -60,7 +60,7 @@ export default function FilterSelect(props) {
 
     return <Select
         style={{ width: '100%' }}
-        mode="multiple"
+        mode={single ? "single" : "multiple"}
         showSearch
         value={value}
         placeholder={title}

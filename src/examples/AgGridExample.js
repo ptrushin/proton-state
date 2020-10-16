@@ -49,6 +49,7 @@ export class AgGridExample extends PureComponent {
                 {
                     name: 'Category', title: 'Category', type: 'select',
                     fieldName: 'Product/CategoryID',
+                    single: true,
                     option: {
                         key: 'CategoryID',
                         label: 'CategoryName',
