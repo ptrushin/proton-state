@@ -43,7 +43,7 @@ export default class ODataDataSource {
     }
 
     getAll = (props) => {
-        const { callback, filter, props: {dataSource, option} } = props;
+        const { callback, filter, dataSource, option } = props;
         const entityName = dataSource.entityName;
         const count = option.count || 0;
 

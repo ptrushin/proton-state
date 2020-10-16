@@ -15,7 +15,7 @@ export default function SingleFilterPanel(props) {
     let FilterComponent = null;
     if (renderFilter) FilterComponent = renderFilter(componentProps);
     else if (type) {
-        FilterComponent = React.createElement(component, componentProps);
+        FilterComponent = React.createElement(component, {...componentProps, key: name});
     }
 
     useEffect(() => {

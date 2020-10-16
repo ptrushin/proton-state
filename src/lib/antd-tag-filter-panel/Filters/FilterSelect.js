@@ -5,14 +5,28 @@ var debounce = require('lodash.debounce');
 
 const { Option } = Select;
 
+
 export default function FilterSelect(props) {
-    const { filters, dataSource, title, value, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+    const { filters, dataSource, title, value, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+
+    const getUnique = (options) => {
+        let resultOptions = [];
+        let keys = [];
+        for (let o of options) {
+            let key = o[option.key];
+            if (!keys.includes(key)) {
+                keys.push(key);
+                resultOptions.push(o);
+            }
+        }
+        return resultOptions;
+    }
 
     const handleSearch = (value) => {
         if (!value) return;
         dataSource.instance.searchByText({
             value: value,
-            callback: (json) => { setOptions(json.value); },
+            callback: (json) => { setOptions(onlyUnique ? getUnique(json.value) : json.value); },
             props: props,
             filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
         })
@@ -25,19 +39,23 @@ export default function FilterSelect(props) {
         , [name]);
 
     const [options, setOptions] = useState(preLoadOptions);
+    const [isPreLoaded, setIsPreLoaded] = useState(false);
 
     useEffect(() => {
-        if (preLoad) {
+        if (visible && preLoad && !isPreLoaded) {
+            setIsPreLoaded(true); 
             dataSource.instance.getAll({
                 callback: (json) => { setOptions(json.value); },
-                props: props,
+                dataSource: dataSource,
+                option: option,
                 filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
             })
         }
-    }, [preLoad, dataSource, props, filters]);
+    }, [preLoad, dataSource, option, filters, visible, name, isPreLoaded]);
 
     useEffect(() => {
         setOptions(null);
+        setIsPreLoaded(false); 
         selectRef.current.focus();
     }, [name, visible])
 
