@@ -1,4 +1,26 @@
 export default class ODataDataSource {
+    getUniqueItems = (items, keyName) => {
+        let resultItems = [];
+        let keys = [];
+        for (let i of items) {
+            let key = i[keyName];
+            if (!keys.includes(key)) {
+                keys.push(key);
+                resultItems.push(i);
+            }
+        }
+        return resultItems;
+    }
+
+    getUniqueItemsWrapped = (json, keyName) => {
+        const items = this.getUniqueItems(json.value, keyName);
+
+        return {
+            '@odata.count': items.length,
+            value: items
+        }
+    }
+
     getFilters = (props) => {
         let {filterDefs, filters} = props;
         let oDataFilters = [];
@@ -14,7 +36,7 @@ export default class ODataDataSource {
     }
 
     searchByText = (props) => {
-        const { value, callback, filter, props: {dataSource, option} } = props;
+        const { value, callback, filter, dataSource, option, onlyUnique } = props;
         const entityName = dataSource.entityName;
         const searchFields = dataSource.searchFields
             ? dataSource.searchFields
@@ -22,14 +44,15 @@ export default class ODataDataSource {
                 ? [option.label]
                 : null;
         if (!searchFields) return;
-        const count = option.count || 20;
+        const count = option.count || 20 * (onlyUnique ? 10 : 1);
 
         let filters = [searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')]
         if (filter) filters.push(filter)
 
         let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+        let orderby = dataSource.orderby ? `&$orderby=${dataSource.orderby.join(',')}` : '';
 
-        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}${expand}&$top=${count}`)
+        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}${expand}${orderby}&$top=${count}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
@@ -37,13 +60,13 @@ export default class ODataDataSource {
                         value: []
                     });
                 } else {
-                    response.json().then(data => callback(data))
+                    response.json().then(data => callback(onlyUnique ? this.getUniqueItemsWrapped(data, option.key) : data))
                 }
             })
     }
 
     getAll = (props) => {
-        const { callback, filter, dataSource, option } = props;
+        const { callback, filter, dataSource, option, onlyUnique } = props;
         const entityName = dataSource.entityName;
         const count = option.count || 0;
 
@@ -51,8 +74,9 @@ export default class ODataDataSource {
         if (filter) filters.push(filter)
 
         let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+        let orderby = dataSource.orderby ? `&$orderby=${dataSource.orderby.join(',')}` : '';
 
-        fetch(`${dataSource.root}/${entityName}?${filters.length > 0 ? `$filter=${filters.join(' and ')}` : ''}${count > 0 ? `${expand}&$top=${count}` : ''}`)
+        fetch(`${dataSource.root}/${entityName}?${filters.length > 0 ? `$filter=${filters.join(' and ')}` : ''}${count > 0 ? `&$top=${count}` : ''}${expand}${orderby}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
@@ -60,7 +84,7 @@ export default class ODataDataSource {
                         value: []
                     });
                 } else {
-                    response.json().then(data => callback(data))
+                    response.json().then(data => callback(onlyUnique ? this.getUniqueItemsWrapped(data, option.key) : data))
                 }
             })
     }
@@ -68,12 +92,15 @@ export default class ODataDataSource {
     quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
 
     searchByKeys = (props) => {
-        const { value, callback, props: {dataSource, option, keyType} } = props;
+        const { value, callback, dataSource, option, keyType, onlyUnique } = props;
         const entityName = dataSource.entityName;
         const keyName = option.key;
         const valueArr = Array.isArray(value) ? value : [value];
+
         let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
-        fetch(`${dataSource.root}/${entityName}?$filter=${valueArr.map(k => `${keyName} eq ${this.quoted(k, keyType)}`).join(' or ')}${expand}`)
+        let orderby = dataSource.orderby ? `&$orderby=${dataSource.orderby.join(',')}` : '';
+        
+        fetch(`${dataSource.root}/${entityName}?$filter=${valueArr.map(k => `${keyName} eq ${this.quoted(k, keyType)}`).join(' or ')}${expand}${orderby}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
@@ -81,7 +108,7 @@ export default class ODataDataSource {
                         value: []
                     });
                 } else {
-                    response.json().then(data => callback(data))
+                    response.json().then(data => callback(onlyUnique ? this.getUniqueItemsWrapped(data, keyName) : data))
                 }
             })
     }

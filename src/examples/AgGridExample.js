@@ -23,6 +23,7 @@ export class AgGridExample extends PureComponent {
                 { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
                 { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
+                { headerName: "CustomenrID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
                 { headerName: "Quantity", field: "Quantity", filter: 'agNumberColumnFilter' },
                 { headerName: "UnitPrice", field: "UnitPrice", filter: 'agNumberColumnFilter' },
                 { headerName: "Discount", field: "Discount", filter: 'agNumberColumnFilter' },
@@ -72,6 +73,25 @@ export class AgGridExample extends PureComponent {
                         entityName: 'Products',
                         filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`,
                         expand: ['Category']
+                        //searchFields: ['Name', "Code"]
+                    }
+                },
+                {
+                    name: 'Customer', title: 'Customer', type: 'select',
+                    fieldName: 'Order/CustomerID',
+                    keyType: 'string',
+                    preLoad: true,
+                    onlyUnique: true, // show unique
+                    //debounce: false,
+                    //debounceTimeout: 500,
+                    option: {
+                        key: 'CustomerID',
+                        label: 'CustomerID'
+                    },
+                    dataSource: {
+                        //name: 'odata',
+                        entityName: 'Orders',
+                        orderby: ["CustomerID"]
                         //searchFields: ['Name', "Code"]
                     }
                 }

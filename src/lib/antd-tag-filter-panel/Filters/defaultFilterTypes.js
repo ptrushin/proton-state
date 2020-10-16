@@ -22,7 +22,10 @@ export let defaultFilterTypes = {
                     filterDef.dataSource.instance.searchByKeys({
                         value: value, 
                         callback: json => callback({options: json.value}),
-                        props: filterDef
+                        dataSource: filterDef.dataSource,
+                        option: filterDef.option,
+                        keyType: filterDef.keyType,
+                        onlyUnique: filterDef.onlyUnique
                     })
                 },
             }

@@ -9,25 +9,14 @@ const { Option } = Select;
 export default function FilterSelect(props) {
     const { filters, dataSource, title, value, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
 
-    const getUnique = (options) => {
-        let resultOptions = [];
-        let keys = [];
-        for (let o of options) {
-            let key = o[option.key];
-            if (!keys.includes(key)) {
-                keys.push(key);
-                resultOptions.push(o);
-            }
-        }
-        return resultOptions;
-    }
-
     const handleSearch = (value) => {
         if (!value) return;
         dataSource.instance.searchByText({
             value: value,
-            callback: (json) => { setOptions(onlyUnique ? getUnique(json.value) : json.value); },
-            props: props,
+            callback: (json) => { setOptions(json.value); },
+            dataSource: props.dataSource,
+            option: props.option,
+            onlyUnique: onlyUnique,
             filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
         })
     }
@@ -48,10 +37,11 @@ export default function FilterSelect(props) {
                 callback: (json) => { setOptions(json.value); },
                 dataSource: dataSource,
                 option: option,
+                onlyUnique: onlyUnique,
                 filter: dataSource.filter ? dataSource.filter({ filters: filters }) : undefined
             })
         }
-    }, [preLoad, dataSource, option, filters, visible, name, isPreLoaded]);
+    }, [preLoad, dataSource, option, filters, visible, name, isPreLoaded, onlyUnique]);
 
     useEffect(() => {
         setOptions(null);
