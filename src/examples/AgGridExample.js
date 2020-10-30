@@ -141,7 +141,10 @@ export class AgGridExample extends PureComponent {
     }
 
     onStateChange = (props) => {
+        console.log('onChangeState', console.trace());
+        if (!this.gridApi) return;
         let { stateProvider } = props;
+        console.log('onChangeState2', stateProvider);
         if (!stateProvider || stateProvider.api !== this.gridApi) this.gridApi.purgeServerSideCache([]);
     }
 

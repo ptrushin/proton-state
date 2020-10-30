@@ -41,20 +41,30 @@ export default class ProtonState {
     }
 
     updateState = (props) => {
+        console.log('changeState0')
         let {initStateProvider} = props || {};
         if (this.props.externalFilterDefs && !this.externalStateProvider) {
             this.externalStateProvider = new ExternalStateProvider(this.props);
             this.addStateProvider(this.externalStateProvider)
         }
+        console.log('changeState1')
         if (this.externalStateProvider) {
+            console.log('changeState2')
             if (this.externalStateProvider.checkChanged()) return;
         }
+        console.log('changeState3')
         let {filters, sort, isUpdated} = this.storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() });
+        console.log('changeState4', initStateProvider, filters, sort, isUpdated)
         if (!initStateProvider && !isUpdated) return;
+        console.log('changeState5', isUpdated)
         for (let stateProvider of this.stateProviders) {
             if (initStateProvider && initStateProvider !== stateProvider) continue;
             stateProvider.changeState({filters: filters, sort: sort, stateProvider: initStateProvider})
         }
+        if (!initStateProvider && isUpdated && this.props.onChange) this.props.onChange({
+            filters: filters,
+            sort: sort
+        });
         
     }
 }

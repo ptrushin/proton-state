@@ -54,7 +54,7 @@ export default class AgGridStateProvider {
         for (let name in filters) {
             let value = filters[name];
             let filterInstance = this.api.getFilterInstance(name);
-            if (!filterInstance) continue;
+            if (!filterInstance || filterInstance.filter == value) continue;
             filterInstance.setModel(value);
             filterInstance.onFilterChanged();
         }

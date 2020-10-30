@@ -40,6 +40,7 @@ export default class ExternalStateProvider {
         };
     }
     changeState = (props) => {
+        console.log('changeState', props)
         let { filters } = props;
         let providerFilters = {};
         for (let name in filters) {
