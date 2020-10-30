@@ -18,7 +18,8 @@ export default class BrowserUrlStoreProvider {
                 pars[name] = filterDef.provider ? filterDef.provider.serialize({filterDef, value}) : JSON.stringify(value);
             }
         }
-        let locationSearch = "?" + queryString.stringify(pars);
+        let locationSearch = queryString.stringify(pars);
+        if (locationSearch) locationSearch = "?" + locationSearch;
         if (window.location.search !== locationSearch)
         {
             this.locationSearch = locationSearch;
