@@ -42,14 +42,16 @@ export default class ExternalStateProvider {
     changeState = (props) => {
         let { filters } = props;
         let providerFilters = {};
+        let isUpdated = false;
         for (let name in filters) {
             let value = filters[name];
             let filterDef = this.filterDefs.filter(f => f.name === name)[0];
-            if (!filterDef) continue;
+            if (!filterDef || this.filterValues[name] === value) continue;
+            isUpdated = true;
             providerFilters[name] = value;
+            this.filterValues[name] = value;
         }
-        this.filterValues = providerFilters;
-        this.props.rootComponent.setState(providerFilters)
+        if (isUpdated) this.props.rootComponent.setState(providerFilters)
     }
     serialize = (props) => {
         let { filterDef, value } = props;

@@ -59,7 +59,7 @@ export default class AgGridStateProvider {
             filterInstance.setModel(value);
             filterInstance.onFilterChanged();
         }
-        /*if (sort) {
+        if (sort) {
             this.api.setSortModel(
                 sort.map((s, i) => {
                     return {
@@ -69,7 +69,7 @@ export default class AgGridStateProvider {
                     }
                 })
             )
-        };*/
+        };
     }
 
     serialize = (props) => {

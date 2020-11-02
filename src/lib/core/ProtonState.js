@@ -18,7 +18,7 @@ export default class ProtonState {
         this.stateProviders.push(stateProvider);
         stateProvider.protonStateApi = this;
         this.filterDefs = [...this.filterDefs, ...stateProvider.getFilterDefs()]
-        this.updateState({initStateProvider: stateProvider});
+        this.updateInternal({initStateProvider: stateProvider});
     }
 
     getSortParName = () => 'sort';
@@ -41,24 +41,31 @@ export default class ProtonState {
     }
 
     updateState = (props) => {
-        let {initStateProvider} = props || {};
+        // add externalStateProvider and exit if not exists
         if (this.props.externalFilterDefs && !this.externalStateProvider) {
             this.externalStateProvider = new ExternalStateProvider(this.props);
             this.addStateProvider(this.externalStateProvider)
+        } 
+        else {
+            this.updateInternal(props);
         }
-        let {filters, sort, isUpdated} = this.storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() });
-        if (this.externalStateProvider) {
+    }
+
+    updateInternal = (props) => {
+        let {initStateProvider} = props || {};
+        let {filters, sort, isUpdated: isUpdatedFromStore} = this.storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() });
+        // check externalStateProvider changes
+        if (!isUpdatedFromStore && this.externalStateProvider) {
             if (this.externalStateProvider.checkChanged()) return;
         }
-        if (!initStateProvider && !isUpdated) return;
+        if (!initStateProvider && !isUpdatedFromStore) return;
         for (let stateProvider of this.stateProviders) {
             if (initStateProvider && initStateProvider !== stateProvider) continue;
             stateProvider.changeState({filters: filters, sort: sort, stateProvider: initStateProvider})
         }
-        if (!initStateProvider && isUpdated && this.props.onChange) this.props.onChange({
+        if (!initStateProvider && isUpdatedFromStore && this.props.onChange) this.props.onChange({
             filters: filters,
             sort: sort
         });
-        
     }
 }

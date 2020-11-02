@@ -1,6 +1,6 @@
 {
   "name": "proton-state",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "",
   "author": "ptrushin",
   "keywords": [
@@ -51,10 +51,10 @@
     ]
   },
   "devDependencies": {
-    "ag-grid-community": "^24.0.0",
-    "ag-grid-enterprise": "^24.0.0",
+    "ag-grid-community": "^23.2.1",
+    "ag-grid-enterprise": "^23.2.1",
     "ag-grid-odata": "^1.0.13",
-    "ag-grid-react": "^24.0.0",
+    "ag-grid-react": "^23.2.1",
     "antd": "^4.6.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

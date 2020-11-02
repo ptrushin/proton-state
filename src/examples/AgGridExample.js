@@ -23,7 +23,7 @@ export class AgGridExample extends PureComponent {
                 { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
                 { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
-                { headerName: "CustomenrID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
+                { headerName: "CustomerID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
                 { headerName: "Quantity", field: "Quantity", filter: 'agNumberColumnFilter' },
                 { headerName: "UnitPrice", field: "UnitPrice", filter: 'agNumberColumnFilter' },
                 { headerName: "Discount", field: "Discount", filter: 'agNumberColumnFilter' },

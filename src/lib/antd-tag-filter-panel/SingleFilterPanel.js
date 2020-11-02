@@ -25,7 +25,6 @@ export default function SingleFilterPanel(props) {
     const buttonRef = useRef(null);
 
     return <div onKeyUp={(event) => {
-        if (event.key === 'Enter') onOk({ filterDef: restProps, value: value, valueProps: valueProps });
         if (event.keyCode === 27) onCancel();
     }
     }>
