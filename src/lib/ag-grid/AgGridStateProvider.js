@@ -9,13 +9,15 @@ export default class AgGridStateProvider {
         this.api.addEventListener('sortChanged', this.onSortChanged);
     }
     getFilterDefs = () => {
-        return this.api.columnController.gridColumns.map(column => {
-            return {
-                provider: this,
-                name: column.colId,
-                ...(this.props.columnDefs || {})[column.colId]
-            }
-        });
+        return this.api.columnController.gridColumns
+            .filter(column => column.colDef.filter)
+            .map(column => {
+                return {
+                    provider: this,
+                    name: column.colId,
+                    ...(this.props.columnDefs || {})[column.colId]
+                }
+            });
     }
     getState = () => {
         return {
