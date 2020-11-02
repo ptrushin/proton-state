@@ -54,6 +54,7 @@ export default class AgGridStateProvider {
         for (let name in filters) {
             let value = filters[name];
             let filterInstance = this.api.getFilterInstance(name);
+            // eslint-disable-next-line
             if (!filterInstance || filterInstance.filter == value) continue;
             filterInstance.setModel(value);
             filterInstance.onFilterChanged();

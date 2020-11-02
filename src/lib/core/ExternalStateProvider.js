@@ -40,7 +40,6 @@ export default class ExternalStateProvider {
         };
     }
     changeState = (props) => {
-        console.log('changeState', props)
         let { filters } = props;
         let providerFilters = {};
         for (let name in filters) {
@@ -49,6 +48,7 @@ export default class ExternalStateProvider {
             if (!filterDef) continue;
             providerFilters[name] = value;
         }
+        this.filterValues = providerFilters;
         this.props.rootComponent.setState(providerFilters)
     }
     serialize = (props) => {

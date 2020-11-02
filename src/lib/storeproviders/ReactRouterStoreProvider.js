@@ -42,7 +42,6 @@ export default class ReactRouterStoreProvider {
         const { filterDefs, sortParName } = props;
         const { history } = this.props;
         let isUpdated = this.locationSearch !== history.location.search;
-        console.log('load', isUpdated, this.locationSearch, history.location.search)
         this.locationSearch = history.location.search;
         let pars = queryString.parse(history.location.search);
         let filters = {};
