@@ -51,13 +51,6 @@ export default function FilterSelect(props) {
 
     const selectRef = useRef(null);
 
-    let getOptionsByValue = (value) => {
-        if (value === undefined || value === null) return undefined;
-        let valueArr = Array.isArray(value) ? value : [value];
-        // eslint-disable-next-line
-        return valueArr.map(v => options.filter(o => o[option.key] == v)[0])
-    }
-
     return <Select
         style={{ width: '100%' }}
         mode={single ? "single" : "multiple"}
@@ -69,9 +62,9 @@ export default function FilterSelect(props) {
         filterOption={false}
         onSearch={debounceHandleSearch}
         ref={selectRef}
-        onChange={(value) => { onChange(value, { options: getOptionsByValue(value) }); selectRef.current.blur() }}
+        onChange={(value, option) => { onChange(value, { options: option.map(o => o.data) }); selectRef.current.blur() }}
         notFoundContent={null}
     >
-        {!options ? null : options.map(d => <Option key={d[option.key]}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option>)}
+        {!options ? null : options.map(d => <Option key={d[option.key]} data={d}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option>)}
     </ Select>;
 }
