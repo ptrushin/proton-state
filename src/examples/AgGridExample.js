@@ -13,6 +13,7 @@ import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
 import AntTagFilterPanelStateProvider from '../lib/antd-tag-filter-panel/AntTagFilterPanelStateProvider'
 import { date2Def } from "./FilterDate2";
 import { oDataDataSource } from '../lib/datasources/ODataDataSource'
+import WrappedList from "../lib/components/WrappedList";
 //import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
 export class AgGridExample extends PureComponent {
@@ -68,7 +69,8 @@ export class AgGridExample extends PureComponent {
                         //count: 20,
                         labelFunc: ({value}) => <div><b>{value.ProductName}</b><br/>{value.Category.CategoryName}</div>
                     },
-                    template: ({ filterDef, value, valueProps }) => !valueProps ? null : `${filterDef.title} = ${valueProps.options.map(e => `${e.ProductName}`).join(', ')}`,
+                    template: ({ filterDef, value, valueProps }) => !valueProps ? null
+                        : <React.Fragment>{filterDef.title} = <WrappedList list={valueProps.options.map(e => `${e.ProductName}`)} length={2} /></React.Fragment>,
                     dataSource: {
                         //name: 'odata',
                         entityName: 'Products',
