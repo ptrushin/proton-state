@@ -7,12 +7,13 @@ const { Option } = Select;
 
 
 export default function FilterSelect(props) {
-    const { filters, dataSource, title, single, value, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout } = props;
+    const { filters, dataSource, title, single, value, valueProps, onlyUnique, onChange, preLoad, option, options: preLoadOptions, name, visible, debounce: isDebounce, debounceTimeout, separators } = props;
 
     const handleSearch = (value) => {
         if (!value) return;
         dataSource.instance.searchByText({
             value: value,
+            separators: separators,
             callback: (json) => { setOptions(json.value); },
             dataSource: props.dataSource,
             option: props.option,

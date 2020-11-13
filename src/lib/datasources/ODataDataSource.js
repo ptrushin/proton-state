@@ -36,7 +36,7 @@ export default class ODataDataSource {
     }
 
     searchByText = (props) => {
-        const { value, callback, filter, dataSource, option, onlyUnique } = props;
+        const { value, callback, filter, dataSource, option, onlyUnique, separators } = props;
         const entityName = dataSource.entityName;
         const searchFields = dataSource.searchFields
             ? dataSource.searchFields
@@ -46,7 +46,13 @@ export default class ODataDataSource {
         if (!searchFields) return;
         const count = option.count || 20 * (onlyUnique ? 10 : 1);
 
-        let filters = [searchFields.map(k => `contains(tolower(${k}),'${value.toLowerCase()}')`).join(' or ')]
+        let valueArr = [value.toLowerCase()];
+        if (separators) {
+            for (let separator of separators) {
+                valueArr = valueArr.map(v => v.split(separator)).flat();
+            }
+        }
+        let filters = [searchFields.map(k => valueArr.map(v => `contains(tolower(${k}),'${v.trim().replaceAll('\'','\'\'')}')`)).flat().join(' or ')]
         if (filter) filters.push(filter)
 
         let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
