@@ -28,7 +28,13 @@ export default function FilterSelect(props) {
             : handleSearch
         , [name]);
 
-    const [options, setOptions] = useState(preLoadOptions);
+    const [options, setOptions] = useState(valueProps ? valueProps.options : preLoadOptions);
+    const [_valueProps, _setValueProps] = useState(valueProps);
+    if (_valueProps !== valueProps)
+    {
+        _setValueProps(valueProps);
+        //setOptions(valueProps.options);
+    }
     const [isPreLoaded, setIsPreLoaded] = useState(false);
 
     useEffect(() => {
@@ -44,28 +50,39 @@ export default function FilterSelect(props) {
         }
     }, [preLoad, dataSource, option, filters, visible, name, isPreLoaded, onlyUnique]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         setOptions(null);
         setIsPreLoaded(false); 
         selectRef.current.focus();
-    }, [name, visible])
+    }, [name, visible])*/
 
     const selectRef = useRef(null);
 
+    const isNull = (value) => value === null || value === undefined || (Array.isArray(value) && value.length === 0);
+
     return <Select
+        key={name}
         style={{ width: '100%' }}
+        autoFocus={true}
         mode={single ? "single" : "multiple"}
         showSearch
-        value={value}
+        value={value === null || value === undefined ? undefined : single ? value[0] : value}
         placeholder={title}
         defaultActiveFirstOption={false}
         showArrow={true}
         filterOption={false}
         onSearch={debounceHandleSearch}
         ref={selectRef}
-        onChange={(value, option) => { onChange(value, { options: option.map(o => o.data) }); selectRef.current.blur() }}
+        onChange={(value, valueOption) => { 
+            onChange(
+                isNull(value) ? undefined : single ? [value] : value, 
+                isNull(value) ? undefined : { options: single ? [valueOption.data] : valueOption.map((o, idx) => {
+                        return o.data || valueProps.options.filter(o => o[option.key] === value[idx])[0]
+                    })}
+                ); selectRef.current.blur() 
+        }}
         notFoundContent={null}
     >
-        {!options ? null : options.map(d => <Option key={d[option.key]} data={d}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option>)}
+        {!options ? null : options.map(d => {return <Option key={d[option.key]} value={d[option.key]} data={d}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option>})}
     </ Select>;
 }

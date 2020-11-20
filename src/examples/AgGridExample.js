@@ -75,7 +75,7 @@ export class AgGridExample extends PureComponent {
                         //name: 'odata',
                         entityName: 'Products',
                         filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`,
-                        expand: ['Category']
+                        expand: ['Category($select=CategoryName)']
                         //searchFields: ['Name', "Code"]
                     }
                 },

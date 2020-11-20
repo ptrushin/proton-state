@@ -22,7 +22,5 @@ export default function WrappedList(props) {
         str = list.join(separator);
     }
 
-    if (listLength > length) list = list
-
     return <span title={listAllStr}>{str}</span>;
 }
