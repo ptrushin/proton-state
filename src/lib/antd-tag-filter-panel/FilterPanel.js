@@ -150,6 +150,20 @@ export default class FilterPanel extends PureComponent {
         })
     }
 
+    clearAllFilters = () => {
+        this.setState({
+            filterValues: [],
+            filterValueProps: [],
+        }, () => {
+            if (this.onChangeEvent) {
+                this.onChangeEvent({
+                    api: this,
+                    filters: this.state.filterValues
+                });
+            }
+        })
+    }
+
     initSingleFilterValueProps = (props) => {
         let { filterDef, valueProps } = props;
         let name = filterDef.name;
@@ -186,6 +200,7 @@ export default class FilterPanel extends PureComponent {
             <Dropdown placement="bottomRight" overlay={
                 <Menu>
                     {this.renderFilterList()}
+                    <Menu.Item onClick={this.clearAllFilters} style={{fontWeight: 'bold'}}>{this.localeText.ClearAllFilterButton}</Menu.Item>
                 </Menu>
             }>
                 <Popover 

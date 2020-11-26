@@ -1,5 +1,6 @@
 export let localeText = {
     'AddFilterButton': 'Add filter',
+    'ClearAllFilterButton': 'Clear all filters',
     'AddButton': 'Add',
     'CancelButton': 'Cancel',
     'FilterDate': {
