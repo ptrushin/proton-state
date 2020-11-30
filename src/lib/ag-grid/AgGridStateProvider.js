@@ -43,7 +43,8 @@ export default class AgGridStateProvider {
         if (!event.event.altKey) return;
         let value = event.value;
         let colId = event.column.colId;
-        let filterInstance = this.api.getFilterInstance(colId);
+        let filterInstance = this.getFilterInstance(colId);
+        if (!filterInstance) return;
         filterInstance.setModel({
             filterType: 'text',
             type: 'equals',
@@ -51,11 +52,18 @@ export default class AgGridStateProvider {
         });
         filterInstance.onFilterChanged();
     }
+    getFilterInstance = (colId) => {
+        const column = this.api.columnController.gridColumns.filter(c => c.colId === colId)[0];
+        if (!column || !column.colDef || !column.colDef.filter) return null;
+        let filterInstance = this.api.getFilterInstance(colId);
+        if (!filterInstance || !filterInstance.providedFilterParams.colDef.filter) return null;
+        return filterInstance;
+    }
     changeState = (props) => {
         let { filters, sort } = props;
         for (let name in filters) {
             let value = filters[name];
-            let filterInstance = this.api.getFilterInstance(name);
+            let filterInstance = this.getFilterInstance(name);
             // eslint-disable-next-line
             if (!filterInstance || filterInstance.filter == value) continue;
             filterInstance.setModel(value);

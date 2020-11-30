@@ -21,7 +21,7 @@ export class AgGridExample extends PureComponent {
         super(props);
         this.state = {
             columnDefs: [
-                { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
+                { headerName: "OrderId", field: "Order.OrderID", filter1: 'agNumberColumnFilter' },
                 { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
                 { headerName: "CustomerID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
