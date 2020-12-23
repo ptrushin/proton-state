@@ -9,7 +9,8 @@ export default class ProtonState {
         this.props = props;
 
         this.storeProviders = [];
-        this.storeProviders.push(new LocalStorageStoreProvider({storageKey: this.getLocalStorageKey()}));
+        this.localStorageStoreProvider = new LocalStorageStoreProvider({storageKey: this.getLocalStorageKey()});
+        this.storeProviders.push(this.localStorageStoreProvider);
         this.storeProviders.push(props.history ? new ReactRouterStoreProvider(props) : new BrowserUrlStoreProvider(props));
 
         this.stateProviders = [];
@@ -36,7 +37,6 @@ export default class ProtonState {
         const state = merge.all(this.stateProviders.map(sp => sp.getState() || {}));
         const filters = state.filters;
         const sort = state.sort;
-        console.log(state);
         if (this.props.onChange) this.props.onChange({
             stateProvider: stateProvider,
             filters: filters,
@@ -61,10 +61,6 @@ export default class ProtonState {
     updateInternal = (props) => {
         let {initStateProvider} = props || {};
 
-        for (let sp of this.storeProviders) {
-            console.log('updateInternal', sp.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() }))
-        }
-
         const overwriteMerge = (destinationArray, sourceArray, options) => Array.from(new Set([...destinationArray, ...sourceArray]));
         let state = merge.all(
             this.storeProviders.map(storeProvider => storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() }) || {}),
@@ -72,7 +68,6 @@ export default class ProtonState {
         );
         let filters = state.filters;
         let sort = state.sort;
-        console.log('sort', sort)
         let isUpdatedFromStore = state.isUpdated;
 
         // check externalStateProvider changes
@@ -88,5 +83,17 @@ export default class ProtonState {
             filters: filters,
             sort: sort
         });
+    }
+
+    clear = () => {
+        this.localStorageStoreProvider.clear();
+    }
+
+    copyToClipboard = () => {
+        this.localStorageStoreProvider.copyToClipboard();
+    }
+
+    setFromClipboard = () => {
+        this.localStorageStoreProvider.setFromClipboard();
     }
 }

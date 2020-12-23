@@ -26,8 +26,10 @@ export class AgGridExample extends PureComponent {
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
                 { headerName: "CustomerID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
                 { headerName: "Quantity", field: "Quantity", filter: 'agNumberColumnFilter' },
-                { headerName: "UnitPrice", field: "UnitPrice", filter: 'agNumberColumnFilter' },
-                { headerName: "Discount", field: "Discount", filter: 'agNumberColumnFilter' },
+                { headerName: "Price & Dicount", children: [
+                    { headerName: "UnitPrice", field: "UnitPrice", filter: 'agNumberColumnFilter' },
+                    { headerName: "Discount", field: "Discount", filter: 'agNumberColumnFilter', columnGroupShow: 'open' }
+                ]}                    
             ],
             defaultColDef: {
                 sortable: true
@@ -204,6 +206,11 @@ export class AgGridExample extends PureComponent {
                         //localeText={localeText}
                         onReady={({ api }) => this.onFilterReady(api)}
                     />
+                    <span style={{ marginLeft: 20 }}>
+                        <button onClick={() => {this.protonState.clear(); window.location.reload();}}>Clear</button>
+                        <button onClick={() => {this.protonState.copyToClipboard();}}>Copy to clipboard</button>
+                        <button onClick={(event) => {const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData; console.log(clipboardData.getData('Text'))}}>Set from clipboard</button>
+                    </span>
                 </div>
 
                 <div style={{ height: 'calc(100% - 30px)' }}>

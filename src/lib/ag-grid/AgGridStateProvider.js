@@ -13,6 +13,7 @@ export default class AgGridStateProvider {
         this.api.addEventListener('columnMoved', this.onStateChanged);
         this.api.addEventListener('columnRowGroupChanged', this.onStateChanged);
         this.api.addEventListener('columnValueChanged', this.onStateChanged);
+        this.api.addEventListener('columnGroupOpened', this.onStateChanged);
         this.api.addEventListener('filterChanged', this.onStateChanged);
         this.api.addEventListener('toolPanelVisibleChanged', this.onStateChanged);
     }
