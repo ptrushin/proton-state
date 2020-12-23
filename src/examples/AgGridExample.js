@@ -152,6 +152,7 @@ export class AgGridExample extends PureComponent {
         this.gridApi = params.api;
         this.protonState.addStateProvider(new AgGridStateProvider({
             api: this.gridApi,
+            columnApi: params.columnApi,
             columnDefs: {
                 "Product.ProductName": {
                     stateName: 'ProductName'

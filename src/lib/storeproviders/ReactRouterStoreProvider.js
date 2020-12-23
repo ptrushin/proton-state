@@ -27,7 +27,7 @@ export default class ReactRouterStoreProvider {
                 sortArray.push(`${s.colId} ${s.sort}`)
             }
         }
-        if (sortArray.length > 0) pars[sortParName] = sortArray.join(",");
+        pars[sortParName] = sortArray.length > 0 ? sortArray.join(",") : undefined;
         let locationSearch = queryString.stringify(pars);
         if (locationSearch) locationSearch = "?" + locationSearch;
         if (history.location.search !== locationSearch)

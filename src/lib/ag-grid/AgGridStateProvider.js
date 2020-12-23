@@ -4,9 +4,17 @@ export default class AgGridStateProvider {
         const { api } = props;
         this.protonStateApi = null;
         this.api = api;
-        this.api.addEventListener('filterChanged', this.onFilterChanged);
+        this.columnApi = api.columnController.columnApi;
         this.api.addEventListener('cellClicked', this.onCellClicked);
-        this.api.addEventListener('sortChanged', this.onSortChanged);
+        this.api.addEventListener('sortChanged', this.onStateChanged);
+        this.api.addEventListener('columnVisible', this.onStateChanged);
+        this.api.addEventListener('columnPinned', this.onStateChanged);
+        this.api.addEventListener('columnResized', this.onStateChanged);
+        this.api.addEventListener('columnMoved', this.onStateChanged);
+        this.api.addEventListener('columnRowGroupChanged', this.onStateChanged);
+        this.api.addEventListener('columnValueChanged', this.onStateChanged);
+        this.api.addEventListener('filterChanged', this.onStateChanged);
+        this.api.addEventListener('toolPanelVisibleChanged', this.onStateChanged);
     }
     getFilterDefs = () => {
         return this.api.columnController.gridColumns
@@ -22,21 +30,17 @@ export default class AgGridStateProvider {
     getState = () => {
         return {
             filters: this.api.getFilterModel(),
-            sort: this.api.getSortModel()
+            sort: this.api.getSortModel(),
+            columnState: this.columnApi.getColumnState(),
+            columnGroupState: this.columnApi.getColumnGroupState(),
+            openedToolPanel: this.api.getOpenedToolPanel()
         };
     }
-    onFilterChanged = (event) => {
+    onStateChanged = (event) => {
+        const state = this.getState();
         this.protonStateApi.changeState({
             stateProvider: this,
-            filters: event.api.getFilterModel(),
-            sort: this.api.getSortModel()
-        });
-    }
-    onSortChanged = (event) => {
-        this.protonStateApi.changeState({
-            stateProvider: this,
-            filters: event.api.getFilterModel(),
-            sort: this.api.getSortModel()
+            ...state
         });
     }
     onCellClicked = (event) => {
@@ -60,8 +64,10 @@ export default class AgGridStateProvider {
         return filterInstance;
     }
     changeState = (props) => {
-        let { filters, sort } = props;
+        let { filters, sort, state } = props;
+        //if (filters) this.api.setFilterModel(filters);
         for (let name in filters) {
+            
             let value = filters[name];
             let filterInstance = this.getFilterInstance(name);
             // eslint-disable-next-line
@@ -80,6 +86,9 @@ export default class AgGridStateProvider {
                 })
             )
         };
+        if (state) {
+            this.setState({state: state});
+        }
     }
 
     serialize = (props) => {
@@ -101,5 +110,26 @@ export default class AgGridStateProvider {
                 filter: value
             }
         }
+    }
+
+    setState = (props) => {
+        const { state } = props;
+        if (state?.columnState) {
+            this.columnApi.setColumnState(state.columnState);
+        }
+        if (state?.columnGroupState) {
+            this.columnApi.setColumnGroupState(state.columnGroupState);
+        }
+        if (state?.filterModel) {
+            this.api.setFilterModel(state?.filterModel);
+        }
+        if (state.openedToolPanel) {
+            this.api.openToolPanel(state.openedToolPanel);
+        } else {
+            this.api.closeToolPanel();
+        }
+
+        //var filtersToolPanel = this.api.getToolPanelInstance('filters');
+        //filtersToolPanel.expandFilters();
     }
 }
