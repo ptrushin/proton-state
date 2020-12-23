@@ -114,14 +114,14 @@ export default class AgGridStateProvider {
 
     setState = (props) => {
         const { state } = props;
-        if (state?.columnState) {
+        if (state.columnState) {
             this.columnApi.setColumnState(state.columnState);
         }
-        if (state?.columnGroupState) {
+        if (state.columnGroupState) {
             this.columnApi.setColumnGroupState(state.columnGroupState);
         }
-        if (state?.filterModel) {
-            this.api.setFilterModel(state?.filterModel);
+        if (state.filterModel) {
+            this.api.setFilterModel(state.filterModel);
         }
         if (state.openedToolPanel) {
             this.api.openToolPanel(state.openedToolPanel);
