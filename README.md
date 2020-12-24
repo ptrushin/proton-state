@@ -9,6 +9,7 @@ Try to play:
 * Change filter on column OrderDate in Gird - Address bar and Grid changed
 * Click with alt key on cell in column Quantity - all filtered by its value - Address bar and Grid changed
 * Now you can copy address from address bar and open it in other tab - all filters applied
+* Change column order and reload page, now aggird state store in localstorage and you can copy/paste state
 
 # install
 npm install proton-state
