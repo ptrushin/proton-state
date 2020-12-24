@@ -16,6 +16,8 @@ import { oDataDataSource } from '../lib/datasources/ODataDataSource'
 import WrappedList from "../lib/components/WrappedList";
 //import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
+console.log(window.location.pathname)
+
 export class AgGridExample extends PureComponent {
     constructor(props) {
         super(props);
@@ -217,7 +219,7 @@ export class AgGridExample extends PureComponent {
                     <button onClick={() => {this.protonState.clear(); window.location.reload();}}>Clear all state</button>
                     <button onClick={() => {this.protonState.clear('LocalStorage'); window.location.reload();}}>Clear local storage state</button>
                     <button onClick={() => {this.protonState.copyToClipboard();}}>Copy to clipboard</button>
-                    <input type="text" onPaste={this.onPaste} value="Set from clipboard (Paste in field)" style={{width: 300}} readOnly={true}></input>
+                    <input type="text" onPaste={this.onPaste} value="Set from clipboard (insert here)" style={{width: 300}} readOnly={true}></input>
                 </div>
 
                 <div style={{ height: 'calc(100% - 65px)' }}>

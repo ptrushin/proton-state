@@ -30,7 +30,7 @@ export default class ProtonState {
 
     getSortParName = () => 'sort';
 
-    getLocalStorageKey = () => '_protonstate';
+    getLocalStorageKey = () => `_ps_${window.location.pathname}`;
 
     changeState = (props) => {
         let {stateProvider} = props;
