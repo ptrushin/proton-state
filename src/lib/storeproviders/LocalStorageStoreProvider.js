@@ -34,16 +34,8 @@ export default class LocalStorageStoreProvider {
         navigator.clipboard.writeText(JSON.stringify(state ? state : null));
     }
 
-    setFromClipboard = async () => {
-        console.log(window.clipboardData.getData('Text'));
-        setTimeout(async()=>console.log(
-            await window.navigator.clipboard.readText()), 3000)
-        navigator.clipboard.readText()
-            .then(text => {
-                console.log('Pasted content: ', text);
-            })
-        //console.log(await navigator.clipboard.readText());
-        const state = this.parse(await navigator.clipboard.readText());
+    setFromString = async (str) => {
+        const state = this.parse(str);
         this.save({state: state})
     } 
 }

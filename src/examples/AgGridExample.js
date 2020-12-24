@@ -21,7 +21,7 @@ export class AgGridExample extends PureComponent {
         super(props);
         this.state = {
             columnDefs: [
-                { headerName: "OrderId", field: "Order.OrderID", filter1: 'agNumberColumnFilter' },
+                { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
                 { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
                 { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
                 { headerName: "CustomerID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
@@ -195,10 +195,16 @@ export class AgGridExample extends PureComponent {
         );
     };
 
+    onPaste = async (e) => {
+        const str = await e.clipboardData.getData('Text');
+        this.protonState.setFromString(str);
+        window.location.reload();
+    };
+
     render() {
         return (
-            <div style={{ width: '100%', height: '100vh' }}>
-                <div style={{ height: '30px' }}>
+            <div style={{ width: '100%', height: '100vh' }} onPaste={this.onPaste}>
+                <div style={{ height: '65px' }}>
                     <span style={{ marginRight: 20 }}><Switch checked={this.state.unitPriceGt20} onChange={() => this.setState({ unitPriceGt20: !this.state.unitPriceGt20 })} /> {`UnitPrice > 20`}</span>
                     <FilterPanel filterDefs={this.state.filterDefs}
                         dataSources={this.state.dataSources}
@@ -206,14 +212,15 @@ export class AgGridExample extends PureComponent {
                         //localeText={localeText}
                         onReady={({ api }) => this.onFilterReady(api)}
                     />
-                    <span style={{ marginLeft: 20 }}>
-                        <button onClick={() => {this.protonState.clear(); window.location.reload();}}>Clear</button>
-                        <button onClick={() => {this.protonState.copyToClipboard();}}>Copy to clipboard</button>
-                        <button onClick={(event) => {const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData; console.log(clipboardData.getData('Text'))}}>Set from clipboard</button>
-                    </span>
+                    <br/>
+                    <button onClick={() => {this.gridApi.setFilterModel(null); }}>Clear aggrid filters</button>
+                    <button onClick={() => {this.protonState.clear(); window.location.reload();}}>Clear all state</button>
+                    <button onClick={() => {this.protonState.clear('LocalStorage'); window.location.reload();}}>Clear local storage state</button>
+                    <button onClick={() => {this.protonState.copyToClipboard();}}>Copy to clipboard</button>
+                    <input type="text" onPaste={this.onPaste} value="Set from clipboard (Paste in field)" style={{width: 300}} readOnly={true}></input>
                 </div>
 
-                <div style={{ height: 'calc(100% - 30px)' }}>
+                <div style={{ height: 'calc(100% - 65px)' }}>
                     <div
                         style={{
                             height: '100%',

@@ -85,15 +85,21 @@ export default class ProtonState {
         });
     }
 
-    clear = () => {
-        this.localStorageStoreProvider.clear();
+    clear = (storeProvider) => {
+        if (storeProvider === 'LocalStorage') {
+            this.localStorageStoreProvider.clear();
+        } else {
+            for (const storeProvider of this.storeProviders) {
+                storeProvider.save({ state: {}, filters: {}, filterDefs: this.filterDefs, sort: [], sortParName: this.getSortParName() })
+            }
+        }
     }
 
     copyToClipboard = () => {
         this.localStorageStoreProvider.copyToClipboard();
     }
 
-    setFromClipboard = () => {
-        this.localStorageStoreProvider.setFromClipboard();
+    setFromString = (str) => {
+        this.localStorageStoreProvider.setFromString(str);
     }
 }
