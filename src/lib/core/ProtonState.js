@@ -58,13 +58,23 @@ export default class ProtonState {
         }
     }
 
+    mergeState = (states) => {
+        const overwriteMerge = (destinationArray, sourceArray, options) => {
+            if (sourceArray && sourceArray[0] && !options.isMergeableObject(sourceArray[0])) return sourceArray;
+            return Array.from(new Set([...destinationArray, ...sourceArray]));
+        }
+        let state = merge.all(
+            states,
+            { arrayMerge: overwriteMerge }
+        );
+        return state;
+    }
+
     updateInternal = (props) => {
         let {initStateProvider} = props || {};
 
-        const overwriteMerge = (destinationArray, sourceArray, options) => Array.from(new Set([...destinationArray, ...sourceArray]));
-        let state = merge.all(
-            this.storeProviders.map(storeProvider => storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() }) || {}),
-            { arrayMerge: overwriteMerge }
+        let state = this.mergeState(
+            this.storeProviders.map(storeProvider => storeProvider.load({ filterDefs: this.filterDefs, sortParName: this.getSortParName() }) || {})
         );
         let filters = state.filters;
         let sort = state.sort;
