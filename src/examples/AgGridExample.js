@@ -101,6 +101,36 @@ export class AgGridExample extends PureComponent {
                         orderby: ["CustomerID"]
                         //searchFields: ['Name', "Code"]
                     }
+                },
+                {
+                    name: 'DiscountSize', title: 'DiscountSize', type: 'select',
+                    option: {
+                        key: 'Key',
+                        label: 'Value'
+                    },
+                    single: true,
+                    options: [
+                        {Key: '> 0', Value: '> 0'},
+                        {Key: '>= 0.1', Value: '>= 0.1'},
+                        {Key: '>= 0.2', Value: '>= 0.2'},
+                    ],
+                    dataSource: {
+                        init: null,
+                        //name: 'odata',
+                        entityName: 'Orders',
+                        orderby: ["CustomerID"]
+                        //searchFields: ['Name', "Code"]
+                    },
+                    dataSources: {
+                        odata: {
+                            filter: ({ value }) => {return !value || value.length !== 1 ? undefined
+                                : value[0] === '> 0' ? `Discount gt 0`
+                                : value[0] === '>= 0.1' ? `Discount ge 0.1`
+                                : value[0] === '>= 0.2' ? `Discount ge 0.2`
+                                : undefined}
+                        }
+                    },
+                    template: ({ filterDef, value, valueProps }) => !value || value.length !== 1 ? null : `${filterDef.title} ${filterDef.options.filter(_ => _.Key === value[0])[0].Value}`,
                 }
             ],
             dataSources: {
