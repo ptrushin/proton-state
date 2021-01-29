@@ -1,0 +1,5 @@
+.proton-antd-select input.ant-select-selection-search-input {
+    white-space: normal;
+    word-break: break-word;
+    background-color: red;
+}

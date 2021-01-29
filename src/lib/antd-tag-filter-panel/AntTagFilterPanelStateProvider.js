@@ -1,3 +1,5 @@
+import { defaultFilterTypes } from './Filters/defaultFilterTypes'
+
 export default class AntTagFilterPanelStateProvider {
     constructor(props) {
         this.props = props;
@@ -43,13 +45,18 @@ export default class AntTagFilterPanelStateProvider {
         this.api.setFilters({filters: providerFilters})
     }
     serialize = (props) => {
-        let {value} = props;
+        let {value, filterDef} = props;
+        const serializeFunc = filterDef.type ? (defaultFilterTypes[filterDef.type] || {}).serialize : null;
         return !value
             ? null
-            : JSON.stringify(value);
+            : serializeFunc ? serializeFunc({filterDef, value}) : JSON.stringify(value);
     }
     deserialize = (props) => {
-        let {value} = props;
-        return JSON.parse(value);
+        let {value, filterDef} = props;
+        const deserializeFunc = filterDef.type ? (defaultFilterTypes[filterDef.type] || {}).deserialize : null;
+        console.log('---', value, defaultFilterTypes[filterDef.type], deserializeFunc)
+        return deserializeFunc
+            ? deserializeFunc({filterDef, value}) 
+            : JSON.parse(value);
     }
 }

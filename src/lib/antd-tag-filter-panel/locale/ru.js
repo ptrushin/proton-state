@@ -3,6 +3,12 @@ export let localeText = {
     'ClearAllFilterButton': 'Очистить все фильтры',
     'AddButton': 'Добавить',
     'CancelButton': 'Отмена',
+    'Close': 'Закрыть',
+    'Copy': 'Копировать',
+    'FilterSelect': {
+        'Add Null': 'Добавить NULL',
+        'Some values not founded': 'Некоторые значения не найдены'
+    },
     'FilterDate': {
         'From': 'От',
         'Till': 'До',

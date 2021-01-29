@@ -64,6 +64,7 @@ export class AgGridExample extends PureComponent {
                 },
                 {
                     name: 'Product', title: 'Product', type: 'select',
+                    hasNull: true,
                     fieldName: 'Product/ProductID',
                     //debounce: false,
                     //debounceTimeout: 500,
@@ -73,12 +74,13 @@ export class AgGridExample extends PureComponent {
                         //count: 20,
                         labelFunc: ({value}) => <div><b>{value.ProductName}</b><br/>{value.Category.CategoryName}</div>
                     },
-                    template: ({ filterDef, value, valueProps }) => !valueProps ? null
+                    template: ({ filterDef, value, valueProps }) => !valueProps 
+                        ? ((value && value.n) ? `${filterDef.title} = NULL` : null)
                         : <React.Fragment>{filterDef.title} = <WrappedList list={valueProps.options.map(e => `${e.ProductName}`)} length={2} /></React.Fragment>,
                     dataSource: {
                         //name: 'odata',
                         entityName: 'Products',
-                        filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category}`,
+                        filter: ({ filters }) => !filters.Category ? null : `CategoryID eq ${filters.Category.s}`,
                         expand: ['Category($select=CategoryName)']
                         //searchFields: ['Name', "Code"]
                     }
@@ -235,7 +237,7 @@ export class AgGridExample extends PureComponent {
 
     render() {
         return (
-            <div style={{ width: '100%', height: '100vh' }} onPaste={this.onPaste}>
+            <div style={{ width: '100%', height: '100vh' }}>
                 <div style={{ height: '65px' }}>
                     <span style={{ marginRight: 20 }}><Switch checked={this.state.unitPriceGt20} onChange={() => this.setState({ unitPriceGt20: !this.state.unitPriceGt20 })} /> {`UnitPrice > 20`}</span>
                     <FilterPanel filterDefs={this.state.filterDefs}

@@ -12,15 +12,15 @@ export let defaultFilterTypes = {
             odata: {
                 filter: ({ filterDef, value }) => {
                     let quoted = (value, keyType) => keyType === 'string' ? `'${value}'` : value;
-                    return !value
-                        ? undefined
-                        : Array.isArray(value)
-                            ? `(${value.map(v => `${filterDef.fieldName} eq ${quoted(v, filterDef.keyType)}`).join(" or ")})`
-                            : `${filterDef.fieldName} eq ${quoted(value)}`
+                    if (!value) return undefined;
+                    const parts = [];
+                    if (Array.isArray(value.s) && value.s.length > 0) parts.push(`(${value.s.map(v => `${filterDef.fieldName} eq ${quoted(v, filterDef.keyType)}`).join(" or ")})`)
+                    if (value.n) parts.push(`${filterDef.fieldName} eq null`)
+                    return '(' + parts.join(' or ') + ')';
                 },
                 init: ({ filterDef, value, callback }) => {
                     filterDef.dataSource.instance.searchByKeys({
-                        value: value, 
+                        value: (value || {}).s, 
                         callback: json => callback({options: json.value}),
                         dataSource: filterDef.dataSource,
                         option: filterDef.option,
@@ -37,8 +37,8 @@ export let defaultFilterTypes = {
                     ? valueProps.options.map(e => filterDef.option.labelFunc ? filterDef.option.labelFunc({value: e}) : e[filterDef.option.label]).join(', ')
                     : filterDef.option.labelFunc ? filterDef.option.labelFunc({value: valueProps.options}) : valueProps.options[filterDef.option.label]}`
         },
-        serialize: ({ filterDef, value }) => JSON.stringify(value),
-        deserialize: ({ filterDef, value }) => JSON.parse(value),
+        serialize: ({ filterDef, value }) => filterDef.hasNull ? JSON.stringify(value) : JSON.stringify((value || {}).s),
+        deserialize: ({ filterDef, value }) => filterDef.hasNull ? JSON.parse(value) : {s: JSON.parse(value)},
     },
     date: {
         component: FilterDate,

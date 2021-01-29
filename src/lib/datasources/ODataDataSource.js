@@ -36,7 +36,7 @@ export default class ODataDataSource {
     }
 
     searchByText = (props) => {
-        const { value, callback, filter, dataSource, option, onlyUnique, separators } = props;
+        const { value, callback, filter, dataSource, option, onlyUnique } = props;
         const entityName = dataSource.entityName;
         const searchFields = dataSource.searchFields
             ? dataSource.searchFields
@@ -47,11 +47,6 @@ export default class ODataDataSource {
         const count = option.count || 20 * (onlyUnique ? 10 : 1);
 
         let valueArr = [value.toLowerCase()];
-        if (separators) {
-            for (let separator of separators) {
-                valueArr = valueArr.map(v => v.split(separator)).flat();
-            }
-        }
         let filters = [searchFields.map(k => valueArr.map(v => `contains(tolower(${k}),'${v.trim().replaceAll('\'','\'\'')}')`)).flat().join(' or ')]
         if (filter) filters.push(filter)
 
@@ -59,6 +54,34 @@ export default class ODataDataSource {
         let orderby = dataSource.orderby ? `&$orderby=${dataSource.orderby.join(',')}` : '';
 
         fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}${expand}${orderby}&$top=${count}`)
+            .then(response => {
+                if (!response.ok) {
+                    callback({
+                        '@odata.count': 0,
+                        value: []
+                    });
+                } else {
+                    response.json().then(data => callback(onlyUnique ? this.getUniqueItemsWrapped(data, option.key) : data))
+                }
+            })
+    }
+
+    searchByExactMatch = ({callback, values, filter, dataSource, option, onlyUnique}) => {
+        const entityName = dataSource.entityName;
+        const searchFields = dataSource.searchFields
+            ? dataSource.searchFields
+            : option.label
+                ? [option.label]
+                : null;
+        if (!searchFields) return;
+
+        let filters = [searchFields.map(k => values.map(v => `${k} eq '${v.trim().replaceAll('\'','\'\'')}'`)).flat().join(' or ')]
+        if (filter) filters.push(filter)
+
+        let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
+        let orderby = dataSource.orderby ? `&$orderby=${dataSource.orderby.join(',')}` : '';
+
+        fetch(`${dataSource.root}/${entityName}?$filter=${filters.join(' and ')}${expand}${orderby}`)
             .then(response => {
                 if (!response.ok) {
                     callback({
