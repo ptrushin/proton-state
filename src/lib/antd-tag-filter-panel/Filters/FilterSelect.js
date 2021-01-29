@@ -116,12 +116,12 @@ export default function FilterSelect(props) {
         ? undefined
         : {s: isNull(value) ? undefined : single ? [value] : value, n: hasNullChecked};
 
-    return <div onPaste1={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleSearch(e.clipboardData.getData('Text'));
-    }}>
-        <Space direction="vertical" style={{width: '100%'}}>
+        /*<div onPaste1={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSearch(e.clipboardData.getData('Text'));
+        }}>*/
+    return <Space direction="vertical" style={{width: '100%'}}>
         <Select
             //searchValue={searchValue}
             className="proton-antd-select"
@@ -151,8 +151,7 @@ export default function FilterSelect(props) {
         >
             {!options ? null : options.map(d => { return <Option key={d[option.key]} value={d[option.key]} data={d}>{option.labelFunc ? option.labelFunc({ value: d }) : d[option.label]}</Option> })}
         </ Select>
-        {hasNull ? <Checkbox checked={valueToHasNullChecked} onChange={(e) => onChange(createValue(valueToSelectValue, e.target.checked), valueProps)}>{localeText.FilterSelect['Add Null']}</Checkbox> : null}
-        {message ? <Popover content={
+        {hasNull ? <Checkbox checked={valueToHasNullChecked} onChange={(e) => onChange(createValue(valueToSelectValue, e.target.checked), valueProps)}>{localeText.FilterSelect['Add Null']}</Checkbox> : null}{message ? <Popover content={
             <Space direction="vertical">
                 {message.message}
                 <Space direction="horizontal">
@@ -162,5 +161,4 @@ export default function FilterSelect(props) {
             </Space>
         } title={message.title} visible={true} trigger="click" /> : null}
     </Space>
-    </div>;
 }
