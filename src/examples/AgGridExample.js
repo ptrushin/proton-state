@@ -16,8 +16,6 @@ import { oDataDataSource } from '../lib/datasources/ODataDataSource'
 import WrappedList from "../lib/components/WrappedList";
 //import {localeText} from '../lib/antd-tag-filter-panel/locale/ru'
 
-console.log(window.location.pathname)
-
 export class AgGridExample extends PureComponent {
     constructor(props) {
         super(props);

@@ -54,7 +54,6 @@ export default class AntTagFilterPanelStateProvider {
     deserialize = (props) => {
         let {value, filterDef} = props;
         const deserializeFunc = filterDef.type ? (defaultFilterTypes[filterDef.type] || {}).deserialize : null;
-        console.log('---', value, defaultFilterTypes[filterDef.type], deserializeFunc)
         return deserializeFunc
             ? deserializeFunc({filterDef, value}) 
             : JSON.parse(value);
