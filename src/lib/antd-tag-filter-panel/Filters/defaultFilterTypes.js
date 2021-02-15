@@ -38,7 +38,10 @@ export let defaultFilterTypes = {
                     : filterDef.option.labelFunc ? filterDef.option.labelFunc({value: valueProps.options}) : valueProps.options[filterDef.option.label]}`
         },
         serialize: ({ filterDef, value }) => filterDef.hasNull ? JSON.stringify(value) : JSON.stringify((value || {}).s),
-        deserialize: ({ filterDef, value }) => filterDef.hasNull ? JSON.parse(value) : {s: JSON.parse(value)},
+        deserialize: ({ filterDef, value }) => {
+            const json = JSON.parse(value);
+            return Array.isArray(json) ? {s: json} : json;
+        }
     },
     date: {
         component: FilterDate,
