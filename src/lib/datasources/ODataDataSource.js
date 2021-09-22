@@ -47,7 +47,7 @@ export default class ODataDataSource {
         const count = option.count || 20 * (onlyUnique ? 10 : 1);
 
         let valueArr = [value.toLowerCase()];
-        let filters = [searchFields.map(k => valueArr.map(v => `contains(tolower(${k}),'${v.trim().replaceAll('\'','\'\'')}')`)).flat().join(' or ')]
+        let filters = ["(" + searchFields.map(k => valueArr.map(v => `contains(tolower(${k}),'${v.trim().replaceAll('\'','\'\'')}')`)).flat().join(' or ') + ")"]
         if (filter) filters.push(filter)
 
         let expand = dataSource.expand ? `&$expand=${dataSource.expand.join(',')}` : '';
