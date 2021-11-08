@@ -17,7 +17,7 @@ export default function FilterSelect(props) {
         let values = [value];
         const seps = separators || ["\t", "\n"]
         for (let separator of seps) {
-            values = values.map(v => v.split(separator)).flat().filter(_ => _);
+            values = values.map(v => v.split(separator)).flat().map(_ => _.trim()).filter(_ => _);
         }
         // unique
         values = [...new Set(values)]
