@@ -21,9 +21,9 @@ export class AgGridExample extends PureComponent {
         super(props);
         this.state = {
             columnDefs: [
-                { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter' },
-                { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn' },
-                { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter' },
+                { headerName: "OrderId", field: "Order.OrderID", filter: 'agNumberColumnFilter', resizable: true },
+                { headerName: "OrderDate", field: "Order.OrderDate", type: 'dateColumn', resizable: true },
+                { headerName: "Product", field: "Product.ProductName", filter: 'agTextColumnFilter', resizable: true },
                 { headerName: "CustomerID", field: "Order.CustomerID", filter: 'agTextColumnFilter' },
                 { headerName: "Quantity", field: "Quantity", filter: 'agNumberColumnFilter' },
                 { headerName: "Price & Dicount", children: [

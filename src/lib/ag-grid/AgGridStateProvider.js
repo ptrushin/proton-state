@@ -4,7 +4,7 @@ export default class AgGridStateProvider {
         const { api } = props;
         this.protonStateApi = null;
         this.api = api;
-        this.columnApi = api.columnController.columnApi;
+        this.columnApi = api.columnModel.columnApi;
         this.api.addEventListener('cellClicked', this.onCellClicked);
         this.api.addEventListener('sortChanged', this.onStateChanged);
         this.api.addEventListener('columnVisible', this.onStateChanged);
@@ -18,7 +18,8 @@ export default class AgGridStateProvider {
         this.api.addEventListener('toolPanelVisibleChanged', this.onStateChanged);
     }
     getFilterDefs = () => {
-        return this.api.columnController.gridColumns
+        console.log('a', this.api)
+        return this.api.columnModel.gridColumns
             .filter(column => column.colDef.filter)
             .map(column => {
                 return {
@@ -58,7 +59,7 @@ export default class AgGridStateProvider {
         filterInstance.onFilterChanged();
     }
     getFilterInstance = (colId) => {
-        const column = this.api.columnController.gridColumns.filter(c => c.colId === colId)[0];
+        const column = this.api.columnModel.gridColumns.filter(c => c.colId === colId)[0];
         if (!column || !column.colDef || !column.colDef.filter) return null;
         let filterInstance = this.api.getFilterInstance(colId);
         if (!filterInstance || !filterInstance.providedFilterParams.colDef.filter) return null;
