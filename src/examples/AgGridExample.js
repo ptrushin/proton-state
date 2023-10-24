@@ -6,7 +6,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { Switch } from 'antd'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import moment from "moment";
+import dayjs from "dayjs";
 import ProtonState from '../lib/core/ProtonState';
 import AgGridStateProvider from "../lib/ag-grid/AgGridStateProvider";
 import FilterPanel from '../lib/antd-tag-filter-panel/FilterPanel'
@@ -37,7 +37,7 @@ export class AgGridExample extends PureComponent {
             columnTypes: {
                 'dateColumn': {
                     filter: 'agDateColumnFilter',
-                    valueFormatter: (params) => params.value == null ? null : moment(params.value).format('DD.MM.YYYY')
+                    valueFormatter: (params) => params.value == null ? null : dayjs(params.value).format('DD.MM.YYYY')
                 }
             },
             filterDefs: [

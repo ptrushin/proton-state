@@ -1,6 +1,6 @@
-import moment from 'moment';
 import FilterDate from './FilterDate'
 import FilterSelect from './FilterSelect'
+import dayjs from 'dayjs';
 
 const dateFormat = 'DD/MM/YYYY';
 const monthFormat = 'MM/YYYY';
@@ -49,28 +49,28 @@ export let defaultFilterTypes = {
             odata: {
                 filter: ({ filterDef, value }) => {
                     if (!value) return undefined;
-                    let from = !value.value[0]
+                    let from = !value.from
                         ? undefined
                         : value.type === 'D'
-                            ? moment(value.value[0])
+                            ? dayjs(value.from)
                             : value.type === 'M'
-                                ? moment(value.value[0]).startOf('month')
+                                ? dayjs(value.from).startOf('month')
                                 : value.type === 'RM'
-                                    ? moment(moment.now()).add(value.value[0], 'M')
+                                    ? dayjs().add(value.from, 'M')
                                     : value.type === 'RD'
-                                        ? moment(moment.now()).add(value.value[0], 'D')
+                                        ? dayjs().add(value.from, 'D')
                                         : undefined;
 
-                    let till = !value.value[1]
+                    let till = !value.till
                         ? undefined
                         : value.type === 'D'
-                            ? moment(value.value[1])
+                            ? dayjs(value.till)
                             : value.type === 'M'
-                                ? moment(value.value[1]).endOf('month')
+                                ? dayjs(value.till).endOf('month')
                                 : value.type === 'RM'
-                                    ? moment(moment.now()).add(value.value[1], 'M')
+                                    ? dayjs().add(value.till, 'M')
                                     : value.type === 'RD'
-                                        ? moment(moment.now()).add(value.value[1], 'D')
+                                        ? dayjs().add(value.till, 'D')
                                         : undefined;
 
                     let filters = [];
@@ -82,40 +82,48 @@ export let defaultFilterTypes = {
         },
         template: ({ filterDef, value, localeText }) => {
             if (!value) return undefined;
-            let from = !value.value[0]
+            let from = !value.from
                 ? undefined
                 : value.type === 'D'
-                    ? moment(value.value[0]).format(dateFormat)
+                    ? value.from.format(dateFormat)
                     : value.type === 'M'
-                        ? moment(value.value[0]).format(monthFormat)
+                        ? value.from.format(monthFormat)
                         : value.type === 'RM'
-                            ? `${value.value[0]} ${localeText.FilterDate.monthsShort}`
+                            ? `${value.from} ${localeText.FilterDate.monthsShort}`
                             : value.type === 'RD'
-                                ? `${value.value[0]} ${localeText.FilterDate.daysShort}`
+                                ? `${value.from} ${localeText.FilterDate.daysShort}`
                                 : undefined;
 
-            let till = !value.value[1]
+            let till = !value.till
                 ? undefined
                 : value.type === 'D'
-                    ? moment(value.value[1]).format(dateFormat)
+                    ? value.till.format(dateFormat)
                     : value.type === 'M'
-                        ? moment(value.value[1]).format(monthFormat)
+                        ? value.till.format(monthFormat)
                         : value.type === 'RM'
-                            ? `${value.value[1]} ${localeText.FilterDate.monthsShort}`
+                            ? `${value.till} ${localeText.FilterDate.monthsShort}`
                             : value.type === 'RD'
-                                ? `${value.value[1]} ${localeText.FilterDate.daysShort}`
+                                ? `${value.till} ${localeText.FilterDate.daysShort}`
                                 : undefined;
 
             return `${filterDef.title}${from ? ` ${localeText.FilterDate.from} ${from}` : ''}${till ? ` ${localeText.FilterDate.till} ${till}` : ''}`
         },
-        serialize: ({ filterDef, value }) => !value ? undefined : JSON.stringify([value.type, value.value[0], value.value[1]]),
+        serialize: ({ filterDef, value }) => {
+            return !value ? undefined : JSON.stringify({
+                "ty": value.type, 
+                "f": dayjs(value.from["$d"]).format(dateFormat), 
+                "t": dayjs(value.till["$d"]).format(dateFormat)
+            })
+        },
         deserialize: ({ filterDef, value }) => {
             if (!value) return undefined;
             let pars = JSON.parse(value);
-            return {
-                type: pars[0],
-                value: [pars[1], pars[2]]
+            let parsed = {
+                type: pars.ty,
+                from: dayjs(pars.f, dateFormat), 
+                till: dayjs(pars.t, dateFormat)
             }
+            return parsed;
         },
     }
 }

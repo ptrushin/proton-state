@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Select, DatePicker, Space, InputNumber } from 'antd';
-import moment from 'moment'
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -61,31 +61,30 @@ export const date2Def = {
                 let from = !value.value
                     ? undefined
                     : value.type === 'I'
-                        ? moment(value.value[0])
+                        ? dayjs(value.value[0])
                         : value.type === 'PM'
-                            ? moment(moment.now()).add(-value.value, 'M')
+                            ? dayjs().add(-value.value, 'M')
                             : value.type === 'PD'
-                                ? moment(moment.now()).add(-value.value, 'D')
+                                ? dayjs().add(-value.value, 'D')
                                 : (value.type === 'NM' || value.type === 'ND')
-                                    ? moment(moment.now())
+                                    ? dayjs()
                                     : undefined;
                 let till = !value.value
                     ? undefined
                     : value.type === 'I'
-                        ? moment(value.value[1])
+                        ? dayjs(value.value[1])
                         : value.type === 'NM'
-                            ? moment(moment.now()).add(value.value, 'M')
+                            ? dayjs().add(value.value, 'M')
                             : value.type === 'ND'
-                                ? moment(moment.now()).add(value.value, 'D')
+                                ? dayjs().add(value.value, 'D')
                                 : (value.type === 'PM' || value.type === 'PD')
-                                    ? moment(moment.now())
+                                    ? dayjs()
                                     : undefined;
 
                 let filters = [];
                 if (from) filters.push(`${filterDef.fieldName} ge ${from.format('YYYY-MM-DD')}T00:00:00Z`)
                 if (till) filters.push(`${filterDef.fieldName} lt ${till.add(1, 'D').format('YYYY-MM-DD')}T00:00:00Z`)
                 return filters.join(' and ');
-                //`Requirement/InvolvementDate lt ${moment(moment.now()).add(key, 'M').format('YYYY-MM-DD')}T00:00:00Z`,
             }
         }
     },
@@ -94,7 +93,7 @@ export const date2Def = {
         let template = !value.value
             ? undefined
             : value.type === 'I'
-                ? `${value.value[0] ? `от ${moment(value.value[0]).format('DD.MM.YYYY')} ` : ''}${value.value[1] ? `до ${moment(value.value[1]).format('DD.MM.YYYY')}` : ''}`
+                ? `${value.value[0] ? `от ${dayjs(value.value[0]).format('DD.MM.YYYY')} ` : ''}${value.value[1] ? `до ${dayjs(value.value[1]).format('DD.MM.YYYY')}` : ''}`
                 : (value.type === 'PM' || value.type === 'PD')
                     ? `за последние ${value.value} ${value.type === 'PM' ? 'месяцев' : 'дней'}`
                     : (value.type === 'NM' || value.type === 'ND')

@@ -59,14 +59,10 @@ export default class ProtonState {
     }
 
     mergeState = (states) => {
-        const overwriteMerge = (destinationArray, sourceArray, options) => {
-            if (sourceArray && sourceArray[0] && !options.isMergeableObject(sourceArray[0])) return sourceArray;
-            return Array.from(new Set([...destinationArray, ...sourceArray]));
+        var state = {};
+        for (let s of states) {
+            state = {...state, ...s};
         }
-        let state = merge.all(
-            states,
-            { arrayMerge: overwriteMerge }
-        );
         return state;
     }
 

@@ -18,7 +18,6 @@ export default class AgGridStateProvider {
         this.api.addEventListener('toolPanelVisibleChanged', this.onStateChanged);
     }
     getFilterDefs = () => {
-        console.log('a', this.api)
         return this.api.columnModel.gridColumns
             .filter(column => column.colDef.filter)
             .map(column => {
